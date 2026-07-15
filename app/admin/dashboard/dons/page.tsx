@@ -57,7 +57,7 @@ export default function AdminDons() {
         <Card title={`Options de don (${options.length})`}>
           <DataTable
             rows={options}
-            rowKey={(o) => o.id}
+            rowKey={(o) => o.title}
             emptyMessage="Aucune option de don enregistrée."
             columns={[
               { key: "title", label: "Titre", render: (o) => o.title },
@@ -67,7 +67,7 @@ export default function AdminDons() {
                 key: "actions",
                 label: "Actions",
                 render: (o) => (
-                  <Button variant="danger" small onClick={() => handleDeleteOption(o.id)}>
+                  <Button variant="danger" small onClick={() => handleDeleteOption(o.title)}>
                     Supprimer
                   </Button>
                 ),
@@ -79,7 +79,7 @@ export default function AdminDons() {
         <Card title={`Affectations de dons (${purposes.length})`}>
           <DataTable
             rows={purposes}
-            rowKey={(p) => p.id}
+            rowKey={(p) => p.title}
             emptyMessage="Aucune affectation enregistrée."
             columns={[
               { key: "title", label: "Titre", render: (p) => p.title },
@@ -89,7 +89,7 @@ export default function AdminDons() {
                 key: "actions",
                 label: "Actions",
                 render: (p) => (
-                  <Button variant="danger" small onClick={() => handleDeletePurpose(p.id)}>
+                  <Button variant="danger" small onClick={() => handleDeletePurpose(p.title)}>
                     Supprimer
                   </Button>
                 ),
