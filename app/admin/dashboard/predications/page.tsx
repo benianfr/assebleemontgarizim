@@ -22,9 +22,7 @@ export default function AdminPredications() {
     if (res.success) {
       const sermonsWithDates = res.sermons.map(sermon => ({
         ...sermon,
-        date: sermon.date instanceof Date ? sermon.date.toLocaleDateString('fr-FR') : 
-              sermon.date?.seconds ? new Date(sermon.date.seconds * 1000).toLocaleDateString('fr-FR') : 
-              sermon.date || ''
+        date: sermon.date || ''
       }));
       setSermons(sermonsWithDates);
     }
