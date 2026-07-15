@@ -19,21 +19,19 @@ export default function AdminTemoignages() {
     if (res.success) {
       const testimonialsWithDates = res.testimonials.map(t => ({
         ...t,
-        createdAt: t.createdAt instanceof Date ? t.createdAt.toLocaleDateString('fr-FR') : 
-                  t.createdAt?.seconds ? new Date(t.createdAt.seconds * 1000).toLocaleDateString('fr-FR') : 
-                  t.createdAt || ''
+        createdAt: typeof t.createdAt === 'string' ? t.createdAt : t.createdAt?.seconds ? new Date(t.createdAt.seconds * 1000).toLocaleDateString('fr-FR') : ''
       }));
       setTestimonials(testimonialsWithDates);
     }
   };
 
-  const handleApprove = async (id: string) => {
-    await setDoc(doc(collection(db, "testimonials"), id), { approved: true });
+  const handleApprove = async (t: Testimonial) => {
+    await setDoc(doc(collection(db, "testimonials"), `${t.prenom}-${t.nom}-${t.telephone}`), { approved: true });
     fetchData();
   };
 
-  const handleReject = async (id: string) => {
-    await deleteDoc(doc(collection(db, "testimonials"), id));
+  const handleReject = async (t: Testimonial) => {
+    await deleteDoc(doc(collection(db, "testimonials"), `${t.prenom}-${t.nom}-${t.telephone}`));
     fetchData();
   };
 
@@ -64,20 +62,20 @@ export default function AdminTemoignages() {
             label: "Actions",
             render: (t) => (
               <ActionsRow>
-                <Button variant="neutral" small onClick={() => handleView(t)}>
+                <Button variant="ghost" small onClick={() => handleView(t)}>
                   Voir
                 </Button>
                 {!t.approved ? (
                   <>
-                    <Button variant="success" small onClick={() => handleApprove(t.id)}>
+                    <Button variant="success" small onClick={() => handleApprove(t)}>
                       Approuver
                     </Button>
-                    <Button variant="danger" small onClick={() => handleReject(t.id)}>
+                    <Button variant="danger" small onClick={() => handleReject(t)}>
                       Rejeter
                     </Button>
                   </>
                 ) : (
-                  <Button variant="danger" small onClick={() => handleReject(t.id)}>
+                  <Button variant="danger" small onClick={() => handleReject(t)}>
                     Supprimer
                   </Button>
                 )}
@@ -89,7 +87,8 @@ export default function AdminTemoignages() {
 
       {selectedTestimonial && (
         <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
-          <Card style={{ maxWidth: "600px", width: "90%", maxHeight: "80vh", overflowY: "auto" }}>
+          <div style={{ maxWidth: "600px", width: "90%", maxHeight: "80vh", overflowY: "auto" }}>
+            <Card>
             <h3 style={{ marginBottom: "16px" }}>Détails du témoignage</h3>
             <div style={{ marginBottom: "16px" }}>
               <strong>Nom:</strong> {selectedTestimonial.prenom} {selectedTestimonial.nom}
@@ -111,25 +110,26 @@ export default function AdminTemoignages() {
               <strong>Statut:</strong> {selectedTestimonial.approved ? <Badge tone="success">Approuvé</Badge> : <Badge tone="warn">En attente</Badge>}
             </div>
             <ActionsRow>
-              <Button variant="neutral" onClick={() => setSelectedTestimonial(null)}>
+              <Button variant="ghost" onClick={() => setSelectedTestimonial(null)}>
                 Fermer
               </Button>
               {!selectedTestimonial.approved ? (
                 <>
-                  <Button variant="success" onClick={() => { handleApprove(selectedTestimonial.id); setSelectedTestimonial(null); }}>
+                  <Button variant="success" onClick={() => { handleApprove(selectedTestimonial); setSelectedTestimonial(null); }}>
                     Approuver
                   </Button>
-                  <Button variant="danger" onClick={() => { handleReject(selectedTestimonial.id); setSelectedTestimonial(null); }}>
+                  <Button variant="danger" onClick={() => { handleReject(selectedTestimonial); setSelectedTestimonial(null); }}>
                     Rejeter
                   </Button>
                 </>
               ) : (
-                <Button variant="danger" onClick={() => { handleReject(selectedTestimonial.id); setSelectedTestimonial(null); }}>
+                <Button variant="danger" onClick={() => { handleReject(selectedTestimonial); setSelectedTestimonial(null); }}>
                   Supprimer
                 </Button>
               )}
             </ActionsRow>
-          </Card>
+            </Card>
+          </div>
         </div>
       )}
     </div>
