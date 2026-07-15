@@ -191,7 +191,7 @@ export default function AdminAPropos() {
                 </Field>
                 <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
                   <Button onClick={() => handleSaveHistorySection(historySection)}>Enregistrer</Button>
-                  <Button variant="secondary" onClick={() => setEditingHistorySection(false)}>Annuler</Button>
+                  <Button variant="ghost" onClick={() => setEditingHistorySection(false)}>Annuler</Button>
                 </div>
                 </Card>
               </div>
@@ -220,7 +220,7 @@ export default function AdminAPropos() {
                 </Field>
                 <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
                   <Button onClick={() => handleSaveHistory(editingHistory)}>Enregistrer</Button>
-                  <Button variant="secondary" onClick={() => setEditingHistory(null)}>Annuler</Button>
+                  <Button variant="ghost" onClick={() => setEditingHistory(null)}>Annuler</Button>
                 </div>
                 </Card>
               </div>
@@ -247,7 +247,7 @@ export default function AdminAPropos() {
                 </Field>
                 <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
                   <Button onClick={handleAddHistory}>Enregistrer</Button>
-                  <Button variant="secondary" onClick={() => setShowAddHistory(false)}>Annuler</Button>
+                  <Button variant="ghost" onClick={() => setShowAddHistory(false)}>Annuler</Button>
                 </div>
                 </Card>
               </div>
@@ -277,7 +277,7 @@ export default function AdminAPropos() {
                 </Field>
                 <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
                   <Button onClick={() => handleSaveFounder(founder)}>Enregistrer</Button>
-                  <Button variant="secondary" onClick={() => setEditingFounder(false)}>Annuler</Button>
+                  <Button variant="ghost" onClick={() => setEditingFounder(false)}>Annuler</Button>
                 </div>
               </div>
             ) : founder ? (
@@ -296,7 +296,7 @@ export default function AdminAPropos() {
                 </div>
                 <div>
                   <strong>Image</strong>
-                  <p style={{ marginTop: 4 }}>{founder.image}</p>
+                  <p style={{ marginTop: 4 }}>{founder.imageUrl}</p>
                 </div>
                 <Button onClick={() => setEditingFounder(true)}>Modifier</Button>
               </div>
@@ -404,7 +404,7 @@ export default function AdminAPropos() {
                 </div>
                 <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
                   <Button onClick={() => handleSaveLocation(editingLocation)}>Enregistrer</Button>
-                  <Button variant="secondary" onClick={() => setEditingLocation(null)}>Annuler</Button>
+                  <Button variant="ghost" onClick={() => setEditingLocation(null)}>Annuler</Button>
                 </div>
                 </Card>
               </div>
@@ -476,7 +476,7 @@ export default function AdminAPropos() {
                 </div>
                 <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
                   <Button onClick={handleAddLocation}>Enregistrer</Button>
-                  <Button variant="secondary" onClick={() => setShowAddLocation(false)}>Annuler</Button>
+                  <Button variant="ghost" onClick={() => setShowAddLocation(false)}>Annuler</Button>
                 </div>
                 </Card>
               </div>
