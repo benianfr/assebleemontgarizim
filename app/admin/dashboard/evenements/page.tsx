@@ -86,7 +86,18 @@ export default function AdminEvenements() {
 
   const columns = (type: Tab) => [
     { key: "title", label: "Titre", render: (e: Event) => e.title },
-    { key: "date", label: "Date", render: (e: Event) => e.date },
+    {
+      key: "date",
+      label: "Date",
+      render: (e: Event) => {
+        const date = e.date as any;
+        if (!date) return "";
+        if (date.toDate) {
+          return date.toDate().toLocaleDateString("fr-FR");
+        }
+        return String(date);
+      }
+    },
     { key: "category", label: "Catégorie", render: (e: Event) => e.category },
     { key: "location", label: "Lieu", render: (e: Event) => e.place },
     {
