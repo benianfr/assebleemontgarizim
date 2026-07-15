@@ -58,7 +58,7 @@ export default function AdminTemoignages() {
             render: (t) =>
               t.approved ? <Badge tone="success">Approuvé</Badge> : <Badge tone="warn">En attente</Badge>,
           },
-          { key: "date", label: "Date", render: (t) => t.createdAt },
+          { key: "date", label: "Date", render: (t) => typeof t.createdAt === 'string' ? t.createdAt : t.createdAt?.seconds ? new Date(t.createdAt.seconds * 1000).toLocaleDateString('fr-FR') : '' },
           {
             key: "actions",
             label: "Actions",
