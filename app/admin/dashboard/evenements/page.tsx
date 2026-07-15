@@ -34,15 +34,13 @@ export default function AdminEvenements() {
       
       const upcomingData = Array.isArray(upcomingRes?.events) ? upcomingRes.events.map(event => ({
         ...event,
-        date: event.date instanceof Date ? event.date.toLocaleDateString('fr-FR') : 
-              event.date?.seconds ? new Date(event.date.seconds * 1000).toLocaleDateString('fr-FR') : 
+        date: event.date?.seconds ? new Date(event.date.seconds * 1000).toLocaleDateString('fr-FR') : 
               event.date || ''
       })) : [];
       
       const pastData = Array.isArray(pastRes?.pastEvents) ? pastRes.pastEvents.map(event => ({
         ...event,
-        date: event.date instanceof Date ? event.date.toLocaleDateString('fr-FR') : 
-              event.date?.seconds ? new Date(event.date.seconds * 1000).toLocaleDateString('fr-FR') : 
+        date: event.date?.seconds ? new Date(event.date.seconds * 1000).toLocaleDateString('fr-FR') : 
               event.date || ''
       })) : [];
       
