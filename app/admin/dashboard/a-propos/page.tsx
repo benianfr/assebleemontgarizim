@@ -161,8 +161,9 @@ export default function AdminAPropos() {
                 },
               ]}
             />
-            <Card style={{ marginTop: 20 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+            <div style={{ marginTop: 20 }}>
+              <Card>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
                 <h3>Image de la section Notre histoire</h3>
                 <Button small onClick={() => setEditingHistorySection(true)}>
                   Modifier
@@ -175,10 +176,12 @@ export default function AdminAPropos() {
                   Aucune image
                 </div>
               )}
-            </Card>
+              </Card>
+            </div>
             {editingHistorySection && (
-              <Card style={{ marginTop: 20 }}>
-                <h3>Modifier l'image de la section Notre histoire</h3>
+              <div style={{ marginTop: 20 }}>
+                <Card>
+                  <h3>Modifier l'image de la section Notre histoire</h3>
                 <Field label="Image">
                   <ImageUpload 
                     onImageUploaded={(url, publicId) => setHistorySection({ ...historySection, imageUrl: url, imagePublicId: publicId })}
@@ -190,11 +193,13 @@ export default function AdminAPropos() {
                   <Button onClick={() => handleSaveHistorySection(historySection)}>Enregistrer</Button>
                   <Button variant="secondary" onClick={() => setEditingHistorySection(false)}>Annuler</Button>
                 </div>
-              </Card>
+                </Card>
+              </div>
             )}
             {editingHistory && (
-              <Card style={{ marginTop: 20 }}>
-                <Field label="Année">
+              <div style={{ marginTop: 20 }}>
+                <Card>
+                  <Field label="Année">
                   <Input value={editingHistory.year} onChange={(e) => setEditingHistory({ ...editingHistory, year: e.target.value })} />
                 </Field>
                 <Field label="Titre">
@@ -217,12 +222,14 @@ export default function AdminAPropos() {
                   <Button onClick={() => handleSaveHistory(editingHistory)}>Enregistrer</Button>
                   <Button variant="secondary" onClick={() => setEditingHistory(null)}>Annuler</Button>
                 </div>
-              </Card>
+                </Card>
+              </div>
             )}
             {showAddHistory && (
-              <Card style={{ marginTop: 20 }}>
-                <h3>Ajouter un événement historique</h3>
-                <Field label="Année">
+              <div style={{ marginTop: 20 }}>
+                <Card>
+                  <h3>Ajouter un événement historique</h3>
+                  <Field label="Année">
                   <Input value={newHistory.year} onChange={(e) => setNewHistory({ ...newHistory, year: e.target.value })} />
                 </Field>
                 <Field label="Titre">
@@ -242,7 +249,8 @@ export default function AdminAPropos() {
                   <Button onClick={handleAddHistory}>Enregistrer</Button>
                   <Button variant="secondary" onClick={() => setShowAddHistory(false)}>Annuler</Button>
                 </div>
-              </Card>
+                </Card>
+              </div>
             )}
           </>
         )}
@@ -331,8 +339,9 @@ export default function AdminAPropos() {
               ]}
             />
             {editingLocation && (
-              <Card style={{ marginTop: 20 }}>
-                <Field label="Nom">
+              <div style={{ marginTop: 20 }}>
+                <Card>
+                  <Field label="Nom">
                   <Input value={editingLocation.name} onChange={(e) => setEditingLocation({ ...editingLocation, name: e.target.value })} />
                 </Field>
                 <Field label="Pasteur">
@@ -397,12 +406,14 @@ export default function AdminAPropos() {
                   <Button onClick={() => handleSaveLocation(editingLocation)}>Enregistrer</Button>
                   <Button variant="secondary" onClick={() => setEditingLocation(null)}>Annuler</Button>
                 </div>
-              </Card>
+                </Card>
+              </div>
             )}
             {showAddLocation && (
-              <Card style={{ marginTop: 20 }}>
-                <h3>Ajouter un lieu de culte</h3>
-                <Field label="Nom">
+              <div style={{ marginTop: 20 }}>
+                <Card>
+                  <h3>Ajouter un lieu de culte</h3>
+                  <Field label="Nom">
                   <Input value={newLocation.name} onChange={(e) => setNewLocation({ ...newLocation, name: e.target.value })} />
                 </Field>
                 <Field label="Pasteur">
@@ -467,7 +478,8 @@ export default function AdminAPropos() {
                   <Button onClick={handleAddLocation}>Enregistrer</Button>
                   <Button variant="secondary" onClick={() => setShowAddLocation(false)}>Annuler</Button>
                 </div>
-              </Card>
+                </Card>
+              </div>
             )}
           </>
         )}
