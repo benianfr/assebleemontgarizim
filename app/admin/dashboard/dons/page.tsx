@@ -62,7 +62,6 @@ export default function AdminDons() {
             columns={[
               { key: "title", label: "Titre", render: (o) => o.title },
               { key: "description", label: "Description", render: (o) => o.description, full: true },
-              { key: "amount", label: "Montant", render: (o) => o.amount },
               {
                 key: "actions",
                 label: "Actions",
