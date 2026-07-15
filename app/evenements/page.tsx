@@ -31,30 +31,10 @@ export default function EvenementsPage() {
       ]);
 
       if (upcomingRes.success) {
-        const upcomingWithDates = upcomingRes.events.map(event => ({
-          ...event,
-          date: event.date
-            ? event.date instanceof Date
-              ? event.date.toLocaleDateString('fr-FR')
-              : typeof event.date === 'object' && 'seconds' in event.date
-                ? new Date(event.date.seconds * 1000).toLocaleDateString('fr-FR')
-                : String(event.date)
-            : ''
-        }));
-        setUpcomingEvents(upcomingWithDates);
+        setUpcomingEvents(upcomingRes.events);
       }
       if (pastRes.success) {
-        const pastWithDates = pastRes.pastEvents.map(event => ({
-          ...event,
-          date: event.date
-            ? event.date instanceof Date
-              ? event.date.toLocaleDateString('fr-FR')
-              : typeof event.date === 'object' && 'seconds' in event.date
-                ? new Date(event.date.seconds * 1000).toLocaleDateString('fr-FR')
-                : String(event.date)
-            : ''
-        }));
-        setPastEvents(pastWithDates);
+        setPastEvents(pastRes.pastEvents);
       }
 
       setLoading(false);

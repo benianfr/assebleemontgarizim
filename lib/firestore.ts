@@ -294,7 +294,7 @@ export interface Event {
   id: string;
   imageUrl: string;
   imagePublicId: string;
-  date: string;
+  date: Timestamp | Date | string | null;
   title: string;
   place: string;
   time: string;
@@ -309,12 +309,11 @@ export async function getUpcomingEvents() {
     const querySnapshot = await getDocs(q);
     const events = querySnapshot.docs.map((doc) => {
       const data = doc.data();
+      const date = data.date?.toDate ? data.date.toDate().toLocaleDateString('fr-FR') : data.date || '';
       return {
         ...data,
         id: doc.id,
-        date: data.date instanceof Date ? data.date.toLocaleDateString('fr-FR') : 
-              data.date?.seconds ? new Date(data.date.seconds * 1000).toLocaleDateString('fr-FR') : 
-              data.date || ''
+        date
       } as Event;
     });
     return { success: true, events };
@@ -367,12 +366,11 @@ export async function getPastEvents() {
     const querySnapshot = await getDocs(q);
     const pastEvents = querySnapshot.docs.map((doc) => {
       const data = doc.data();
+      const date = data.date?.toDate ? data.date.toDate().toLocaleDateString('fr-FR') : data.date || '';
       return {
         ...data,
         id: doc.id,
-        date: data.date instanceof Date ? data.date.toLocaleDateString('fr-FR') : 
-              data.date?.seconds ? new Date(data.date.seconds * 1000).toLocaleDateString('fr-FR') : 
-              data.date || ''
+        date
       } as Event;
     });
     return { success: true, pastEvents };
