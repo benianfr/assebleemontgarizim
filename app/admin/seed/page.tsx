@@ -230,7 +230,7 @@ export default function SeedPage() {
       setMessage("✅ Firestore database seeded successfully!");
     } catch (err) {
       console.error("Error seeding Firestore:", err);
-      setError(`Erreur: ${err.message || "Unknown error"}`);
+      setError(`Erreur: ${err instanceof Error ? err.message : "Unknown error"}`);
     }
 
     setLoading(false);
