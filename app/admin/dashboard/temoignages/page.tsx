@@ -47,7 +47,7 @@ export default function AdminTemoignages() {
 
       <DataTable
         rows={testimonials}
-        rowKey={(t) => t.id}
+        rowKey={(t) => `${t.prenom}-${t.nom}-${t.telephone}`}
         emptyMessage="Aucun témoignage pour le moment."
         columns={[
           { key: "name", label: "Nom", render: (t) => `${t.prenom} ${t.nom}` },
