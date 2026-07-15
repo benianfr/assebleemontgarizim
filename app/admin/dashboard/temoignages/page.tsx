@@ -1,0 +1,137 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { getTestimonials, Testimonial } from "@/lib/firestore";
+import { doc, setDoc, deleteDoc, collection } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { PageHeader, DataTable, Button, Badge, ActionsRow, Card } from "@/components/admin/AdminUI";
+
+export default function AdminTemoignages() {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | null>(null);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const res = await getTestimonials();
+    if (res.success) {
+      const testimonialsWithDates = res.testimonials.map(t => ({
+        ...t,
+        createdAt: t.createdAt instanceof Date ? t.createdAt.toLocaleDateString('fr-FR') : 
+                  t.createdAt?.seconds ? new Date(t.createdAt.seconds * 1000).toLocaleDateString('fr-FR') : 
+                  t.createdAt || ''
+      }));
+      setTestimonials(testimonialsWithDates);
+    }
+  };
+
+  const handleApprove = async (id: string) => {
+    await setDoc(doc(collection(db, "testimonials"), id), { approved: true });
+    fetchData();
+  };
+
+  const handleReject = async (id: string) => {
+    await deleteDoc(doc(collection(db, "testimonials"), id));
+    fetchData();
+  };
+
+  const handleView = (t: Testimonial) => {
+    setSelectedTestimonial(t);
+  };
+
+  return (
+    <div>
+      <PageHeader title="Témoignages" description={`${testimonials.length} témoignage(s) reçu(s).`} />
+
+      <DataTable
+        rows={testimonials}
+        rowKey={(t) => t.id}
+        emptyMessage="Aucun témoignage pour le moment."
+        columns={[
+          { key: "name", label: "Nom", render: (t) => `${t.prenom} ${t.nom}` },
+          { key: "content", label: "Témoignage", render: (t) => t.temoignage?.substring(0, 100) + (t.temoignage?.length > 100 ? '...' : ''), full: true },
+          {
+            key: "status",
+            label: "Statut",
+            render: (t) =>
+              t.approved ? <Badge tone="success">Approuvé</Badge> : <Badge tone="warn">En attente</Badge>,
+          },
+          { key: "date", label: "Date", render: (t) => t.createdAt },
+          {
+            key: "actions",
+            label: "Actions",
+            render: (t) => (
+              <ActionsRow>
+                <Button variant="neutral" small onClick={() => handleView(t)}>
+                  Voir
+                </Button>
+                {!t.approved ? (
+                  <>
+                    <Button variant="success" small onClick={() => handleApprove(t.id)}>
+                      Approuver
+                    </Button>
+                    <Button variant="danger" small onClick={() => handleReject(t.id)}>
+                      Rejeter
+                    </Button>
+                  </>
+                ) : (
+                  <Button variant="danger" small onClick={() => handleReject(t.id)}>
+                    Supprimer
+                  </Button>
+                )}
+              </ActionsRow>
+            ),
+          },
+        ]}
+      />
+
+      {selectedTestimonial && (
+        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
+          <Card style={{ maxWidth: "600px", width: "90%", maxHeight: "80vh", overflowY: "auto" }}>
+            <h3 style={{ marginBottom: "16px" }}>Détails du témoignage</h3>
+            <div style={{ marginBottom: "16px" }}>
+              <strong>Nom:</strong> {selectedTestimonial.prenom} {selectedTestimonial.nom}
+            </div>
+            <div style={{ marginBottom: "16px" }}>
+              <strong>Titre:</strong> {selectedTestimonial.titre}
+            </div>
+            <div style={{ marginBottom: "16px" }}>
+              <strong>Téléphone:</strong> {selectedTestimonial.telephone}
+            </div>
+            <div style={{ marginBottom: "16px" }}>
+              <strong>Témoignage:</strong>
+              <p style={{ marginTop: "8px", lineHeight: "1.6" }}>{selectedTestimonial.temoignage}</p>
+            </div>
+            <div style={{ marginBottom: "16px" }}>
+              <strong>Date:</strong> {selectedTestimonial.createdAt}
+            </div>
+            <div style={{ marginBottom: "24px" }}>
+              <strong>Statut:</strong> {selectedTestimonial.approved ? <Badge tone="success">Approuvé</Badge> : <Badge tone="warn">En attente</Badge>}
+            </div>
+            <ActionsRow>
+              <Button variant="neutral" onClick={() => setSelectedTestimonial(null)}>
+                Fermer
+              </Button>
+              {!selectedTestimonial.approved ? (
+                <>
+                  <Button variant="success" onClick={() => { handleApprove(selectedTestimonial.id); setSelectedTestimonial(null); }}>
+                    Approuver
+                  </Button>
+                  <Button variant="danger" onClick={() => { handleReject(selectedTestimonial.id); setSelectedTestimonial(null); }}>
+                    Rejeter
+                  </Button>
+                </>
+              ) : (
+                <Button variant="danger" onClick={() => { handleReject(selectedTestimonial.id); setSelectedTestimonial(null); }}>
+                  Supprimer
+                </Button>
+              )}
+            </ActionsRow>
+          </Card>
+        </div>
+      )}
+    </div>
+  );
+}
