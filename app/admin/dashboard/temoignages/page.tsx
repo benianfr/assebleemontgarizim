@@ -104,7 +104,7 @@ export default function AdminTemoignages() {
               <p style={{ marginTop: "8px", lineHeight: "1.6" }}>{selectedTestimonial.temoignage}</p>
             </div>
             <div style={{ marginBottom: "16px" }}>
-              <strong>Date:</strong> {selectedTestimonial.createdAt}
+              <strong>Date:</strong> {typeof selectedTestimonial.createdAt === 'string' ? selectedTestimonial.createdAt : selectedTestimonial.createdAt?.seconds ? new Date(selectedTestimonial.createdAt.seconds * 1000).toLocaleDateString('fr-FR') : ''}
             </div>
             <div style={{ marginBottom: "24px" }}>
               <strong>Statut:</strong> {selectedTestimonial.approved ? <Badge tone="success">Approuvé</Badge> : <Badge tone="warn">En attente</Badge>}
