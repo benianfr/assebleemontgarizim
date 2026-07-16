@@ -6,6 +6,13 @@ import { getUpcomingEvents, Event } from "@/lib/firestore";
 
 const delays = ["", "reveal-delay-1", "reveal-delay-2"];
 
+const formatDate = (date: any) => {
+  if (!date) return "";
+  if (date.toDate) return date.toDate().toLocaleDateString("fr-FR");
+  if (date instanceof Date) return date.toLocaleDateString("fr-FR");
+  return String(date);
+};
+
 export default function Events() {
   const ref = useRevealOnScroll<HTMLElement>();
   const [events, setEvents] = useState<Event[]>([]);
@@ -82,7 +89,7 @@ export default function Events() {
                 )}
               </div>
               <div className="card-body">
-                <span className="tl-date">{e.date}</span>
+                <span className="tl-date">{formatDate(e.date)}</span>
                 <h3>{e.title}</h3>
                 <div className="tl-meta">
                   <span>{e.place}</span>
