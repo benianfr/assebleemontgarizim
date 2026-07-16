@@ -58,7 +58,8 @@ export default function AdminEvenements() {
   const safePastEvents = useMemo(() => Array.isArray(pastEvents) ? pastEvents : [], [pastEvents]);
 
   const handleDeleteEvent = async (id: string, type: Tab) => {
-    await deleteDoc(doc(collection(db, "events"), id));
+    const collectionName = type === "upcoming" ? "events" : "pastEvents";
+    await deleteDoc(doc(collection(db, collectionName), id));
     fetchData();
   };
 
