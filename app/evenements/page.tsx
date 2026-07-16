@@ -195,7 +195,15 @@ export default function EvenementsPage() {
                   </div>
                   <div className="card-body">
                     <div style={{ display: "flex", gap: "12px", marginBottom: "12px", flexWrap: "wrap" }}>
-                      <span className="tl-date">{event.date}</span>
+                      <span className="tl-date">
+                        {(() => {
+                          const date = event.date as any;
+                          if (!date) return "";
+                          if (date instanceof Date) return date.toLocaleDateString('fr-FR');
+                          if (date.toDate) return date.toDate().toLocaleDateString('fr-FR');
+                          return String(date);
+                        })()}
+                      </span>
                       <span
                         style={{
                           display: "inline-flex",
@@ -254,7 +262,13 @@ export default function EvenementsPage() {
                         marginBottom: "8px",
                       }}
                     >
-                      {event.date}
+                      {(() => {
+                        const date = event.date as any;
+                        if (!date) return "";
+                        if (date instanceof Date) return date.toLocaleDateString('fr-FR');
+                        if (date.toDate) return date.toDate().toLocaleDateString('fr-FR');
+                        return String(date);
+                      })()}
                     </span>
                     <h3>{event.title}</h3>
                     <p style={{ fontSize: "13.5px", lineHeight: "1.65" }}>
@@ -342,7 +356,15 @@ export default function EvenementsPage() {
                 )}
               </div>
               <div style={{ display: "flex", gap: "12px", marginBottom: "16px", flexWrap: "wrap" }}>
-                <span className="tl-date">{selectedEvent.date}</span>
+                <span className="tl-date">
+                  {(() => {
+                    const date = selectedEvent.date as any;
+                    if (!date) return "";
+                    if (date instanceof Date) return date.toLocaleDateString('fr-FR');
+                    if (date.toDate) return date.toDate().toLocaleDateString('fr-FR');
+                    return String(date);
+                  })()}
+                </span>
                 <span
                   style={{
                     display: "inline-flex",
