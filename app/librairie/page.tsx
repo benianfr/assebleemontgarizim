@@ -3,9 +3,28 @@
 import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import { useRevealOnScroll } from "@/components/useRevealOnScroll";
+import { getContactInfo, ContactInfo } from "@/lib/firestore";
+import { useEffect, useState } from "react";
 
 export default function LibrairiePage() {
   const ref = useRevealOnScroll();
+  const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      const result = await getContactInfo();
+      if (result.success) setContactInfo(result.contactInfo);
+    }
+    fetchData();
+  }, []);
+
+  const handleOrder = (title: string, price: string) => {
+    const message = encodeURIComponent(
+      `Bonjour, je souhaite commander le livre "${title}" au prix de ${price}.`
+    );
+    const whatsappNumber = contactInfo?.whatsapp || "2250700000000";
+    window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');
+  };
 
   return (
     <>
@@ -70,7 +89,11 @@ export default function LibrairiePage() {
                     </p>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <span style={{ fontWeight: 700, color: "var(--gold)" }}>{book.price}</span>
-                      <button className="btn btn-navy" style={{ padding: "8px 16px", fontSize: "14px" }}>
+                      <button 
+                        className="btn btn-navy" 
+                        style={{ padding: "8px 16px", fontSize: "14px" }}
+                        onClick={() => handleOrder(book.title, book.price)}
+                      >
                         Commander
                       </button>
                     </div>
