@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import { submitTestimonial, getApprovedTestimonials, Testimonial } from "@/lib/firestore";
@@ -29,7 +29,7 @@ export default function TemoignagesPage() {
     fetchTestimonials();
   }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError("");
