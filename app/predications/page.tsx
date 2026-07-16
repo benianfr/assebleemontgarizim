@@ -118,6 +118,7 @@ export default function PredicationsPage() {
       description: "Comprendre qui vous êtes en Christ change tout. Ce message explore notre nouvelle identité en Jésus et comment elle impacte notre vie quotidienne.",
       category: "Identité",
       scripture: "Éphésiens 1:3-14",
+      videoUrl: "",
       order: 4,
     },
     {
