@@ -153,7 +153,23 @@ export default function AdminEvenements() {
                     <Input value={newEvent.title} onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })} />
                   </Field>
                   <Field label="Date">
-                    <Input value={newEvent.date} onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })} />
+                    <Input 
+                      value={
+                        (() => {
+                          const date = newEvent.date as any;
+                          if (!date) return "";
+                          if (date instanceof Date) return date.toISOString().split("T")[0];
+                          if (date.toDate) return date.toDate().toISOString().split("T")[0];
+                          return String(date);
+                        })()
+                      }
+                      onChange={(e) => 
+                        setNewEvent({ 
+                          ...newEvent, 
+                          date: e.target.value 
+                        })
+                      }
+                    />
                   </Field>
                   <Field label="Lieu">
                     <Input value={newEvent.place} onChange={(e) => setNewEvent({ ...newEvent, place: e.target.value })} />
@@ -189,7 +205,23 @@ export default function AdminEvenements() {
                     <Input value={editingEvent.title} onChange={(e) => setEditingEvent({ ...editingEvent, title: e.target.value })} />
                   </Field>
                   <Field label="Date">
-                    <Input value={editingEvent.date} onChange={(e) => setEditingEvent({ ...editingEvent, date: e.target.value })} />
+                    <Input 
+                      value={
+                        (() => {
+                          const date = editingEvent.date as any;
+                          if (!date) return "";
+                          if (date instanceof Date) return date.toISOString().split("T")[0];
+                          if (date.toDate) return date.toDate().toISOString().split("T")[0];
+                          return String(date);
+                        })()
+                      }
+                      onChange={(e) => 
+                        setEditingEvent({ 
+                          ...editingEvent, 
+                          date: e.target.value 
+                        })
+                      }
+                    />
                   </Field>
                   <Field label="Lieu">
                     <Input value={editingEvent.place} onChange={(e) => setEditingEvent({ ...editingEvent, place: e.target.value })} />
