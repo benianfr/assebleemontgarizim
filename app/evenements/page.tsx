@@ -12,16 +12,8 @@ export default function EvenementsPage() {
   const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([]);
   const [pastEvents, setPastEvents] = useState<Event[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>("Tous");
   const [loading, setLoading] = useState(true);
-
-  const categories = [
-    { name: "Tous", count: 12 },
-    { name: "Cultes", count: 4 },
-    { name: "Formation", count: 3 },
-    { name: "Jeunesse", count: 2 },
-    { name: "Familles", count: 2 },
-    { name: "Événements spéciaux", count: 1 },
-  ];
 
   useEffect(() => {
     async function fetchData() {
@@ -43,6 +35,30 @@ export default function EvenementsPage() {
     fetchData();
   }, []);
 
+  // Generate categories dynamically from events
+  const categories = (() => {
+    const allEvents = [...upcomingEvents, ...pastEvents];
+    const categoryCount = allEvents.reduce((acc, event) => {
+      const category = event.category || "Autre";
+      acc[category] = (acc[category] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    const categoryArray = Object.entries(categoryCount).map(([name, count]) => ({ name, count }));
+    categoryArray.sort((a, b) => b.count - a.count);
+
+    return [{ name: "Tous", count: allEvents.length }, ...categoryArray];
+  })();
+
+  // Filter events by selected category
+  const filteredUpcomingEvents = selectedCategory === "Tous"
+    ? upcomingEvents
+    : upcomingEvents.filter(event => event.category === selectedCategory);
+
+  const filteredPastEvents = selectedCategory === "Tous"
+    ? pastEvents
+    : pastEvents.filter(event => event.category === selectedCategory);
+
   if (loading) {
     return (
       <>
@@ -56,9 +72,6 @@ export default function EvenementsPage() {
       </>
     );
   }
-
-  const displayUpcomingEvents = upcomingEvents;
-  const displayPastEvents = pastEvents;
 
   return (
     <>
@@ -91,12 +104,13 @@ export default function EvenementsPage() {
               {categories.map((cat) => (
                 <button
                   key={cat.name}
+                  onClick={() => setSelectedCategory(cat.name)}
                   style={{
                     padding: "10px 24px",
                     borderRadius: "100px",
-                    border: cat.name === "Tous" ? "none" : "1.5px solid rgba(10,42,77,0.2)",
-                    background: cat.name === "Tous" ? "var(--deep-blue)" : "transparent",
-                    color: cat.name === "Tous" ? "#fff" : "var(--deep-blue)",
+                    border: cat.name === selectedCategory ? "none" : "1.5px solid rgba(10,42,77,0.2)",
+                    background: cat.name === selectedCategory ? "var(--deep-blue)" : "transparent",
+                    color: cat.name === selectedCategory ? "#fff" : "var(--deep-blue)",
                     fontSize: "14px",
                     fontWeight: 600,
                     cursor: "pointer",
@@ -118,7 +132,7 @@ export default function EvenementsPage() {
               <h2>Prochains événements</h2>
             </div>
             <div className="scroll-horizontal">
-              {displayUpcomingEvents.map((event, index) => (
+              {filteredUpcomingEvents.map((event, index) => (
                 <div className="card" key={event.title} onClick={() => setSelectedEvent(event)} style={{ cursor: "pointer" }}>
                   <div className="card-media">
                     {event.imageUrl ? (
@@ -175,7 +189,7 @@ export default function EvenementsPage() {
               <h2>Événements passés</h2>
             </div>
             <div className="scroll-horizontal">
-              {displayPastEvents.map((event) => (
+              {filteredPastEvents.map((event) => (
                 <div className="card" key={event.title}>
                   <div className="card-media">
                     {event.imageUrl ? (
