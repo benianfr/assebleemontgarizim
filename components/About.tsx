@@ -2,18 +2,25 @@
 
 import { useEffect, useState } from "react";
 import { useRevealOnScroll } from "./useRevealOnScroll";
-import { getValues, Value } from "@/lib/firestore";
+import { getValues, Value, getAboutSection, AboutSection } from "@/lib/firestore";
 
 export default function About() {
   const ref = useRevealOnScroll<HTMLElement>();
   const [values, setValues] = useState<Value[]>([]);
+  const [aboutSection, setAboutSection] = useState<AboutSection | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
-      const result = await getValues();
-      if (result.success) {
-        setValues(result.values);
+      const [valuesRes, aboutRes] = await Promise.all([
+        getValues(),
+        getAboutSection(),
+      ]);
+      if (valuesRes.success) {
+        setValues(valuesRes.values);
+      }
+      if (aboutRes.success && aboutRes.aboutSection) {
+        setAboutSection(aboutRes.aboutSection);
       }
       setLoading(false);
     }
@@ -33,19 +40,16 @@ export default function About() {
         <div className="about-media reveal">
           <div className="ph"></div>
           <div className="tag">
-            <strong>18 années</strong>
-            <span>au service de la communauté d&apos;Abidjan</span>
+            <strong>{aboutSection?.years || 18} années</strong>
+            <span>{aboutSection?.yearsText || "au service de la communauté d'Abidjan"}</span>
           </div>
         </div>
 
         <div className="about-text reveal reveal-delay-1">
-          <span className="eyebrow">Notre église</span>
-          <h2>Un lieu où la foi devient un mode de vie</h2>
+          <span className="eyebrow">{aboutSection?.title || "Notre église"}</span>
+          <h2>{aboutSection?.subtitle || "Un lieu où la foi devient un mode de vie"}</h2>
           <p className="lead">
-            Depuis notre fondation, l&apos;Assemblée Mont Garizim accompagne des
-            hommes et des femmes de toutes générations dans leur cheminement
-            spirituel. Nous croyons en une foi vivante, incarnée dans la
-            prière, l&apos;étude de la Parole et le service du prochain.
+            {aboutSection?.description || "Depuis notre fondation, l'Assemblée Mont Garizim accompagne des hommes et des femmes de toutes générations dans leur cheminement spirituel. Nous croyons en une foi vivante, incarnée dans la prière, l'étude de la Parole et le service du prochain."}
           </p>
 
           <div className="about-points">

@@ -610,3 +610,36 @@ export async function getNextService() {
     return { success: false, error, service: null };
   }
 }
+
+// About section document
+export interface AboutSection {
+  title: string;
+  subtitle: string;
+  description: string;
+  years: number;
+  yearsText: string;
+}
+
+export async function getAboutSection() {
+  try {
+    const docRef = doc(db, "home", "aboutSection");
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return { success: true, aboutSection: docSnap.data() as AboutSection };
+    }
+    return { success: false, error: "About section not found", aboutSection: null };
+  } catch (error) {
+    console.error("Error fetching about section:", error);
+    return { success: false, error, aboutSection: null };
+  }
+}
+
+export async function updateAboutSection(item: AboutSection) {
+  try {
+    await setDoc(doc(db, "home", "aboutSection"), item);
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating about section:", error);
+    return { success: false, error };
+  }
+}

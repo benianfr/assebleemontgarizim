@@ -25,6 +25,7 @@ import {
 
 export const MENU_ITEMS = [
   { path: "/admin/dashboard", label: "Tableau de bord", Icon: GridIcon },
+  { path: "/admin/dashboard/notre-eglise", label: "Notre église", Icon: InfoIcon },
   { path: "/admin/dashboard/a-propos", label: "À propos", Icon: InfoIcon },
   { path: "/admin/dashboard/evenements", label: "Événements", Icon: CalendarIcon },
   { path: "/admin/dashboard/predications", label: "Prédications", Icon: MicIcon },
