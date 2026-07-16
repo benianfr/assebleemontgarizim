@@ -66,6 +66,7 @@ export default function PredicationsPage() {
 
   const displaySermons = sermons.length > 0 ? sermons : [
     {
+      id: "1",
       imageUrl: "",
       imagePublicId: "",
       title: "Marcher par la foi, non par la vue",
@@ -75,9 +76,11 @@ export default function PredicationsPage() {
       description: "Dans ce message, nous explorons comment vivre une vie de foi authentique qui transcende les circonstances visibles. Apprenez à vous appuyer sur les promesses de Dieu plutôt que sur ce que vous voyez.",
       category: "Foi",
       scripture: "2 Corinthiens 5:7",
+      videoUrl: "",
       order: 1,
     },
     {
+      id: "2",
       imageUrl: "",
       imagePublicId: "",
       title: "La grâce qui transforme",
@@ -87,9 +90,11 @@ export default function PredicationsPage() {
       description: "Découvrez la puissance transformatrice de la grâce de Dieu. Ce message explique comment la grâce ne nous sauve pas seulement, mais nous change continuellement à l'image de Christ.",
       category: "Grâce",
       scripture: "Tite 2:11-12",
+      videoUrl: "",
       order: 2,
     },
     {
+      id: "3",
       imageUrl: "",
       imagePublicId: "",
       title: "Espérer contre toute espérance",
@@ -99,9 +104,11 @@ export default function PredicationsPage() {
       description: "Quand tout semble perdu, comment garder espoir ? Ce message nous montre comment Abraham a cru contre toute espérance et comment nous pouvons faire de même.",
       category: "Espérance",
       scripture: "Romains 4:18",
+      videoUrl: "",
       order: 3,
     },
     {
+      id: "4",
       imageUrl: "",
       imagePublicId: "",
       title: "L'identité en Christ",
@@ -114,6 +121,7 @@ export default function PredicationsPage() {
       order: 4,
     },
     {
+      id: "5",
       imageUrl: "",
       imagePublicId: "",
       title: "La puissance de la prière",
@@ -123,9 +131,11 @@ export default function PredicationsPage() {
       description: "La prière n'est pas une option, mais une nécessité. Découvrez les principes bibliques pour une vie de prière puissante et efficace.",
       category: "Prière",
       scripture: "Jacques 5:16",
+      videoUrl: "",
       order: 5,
     },
     {
+      id: "6",
       imageUrl: "",
       imagePublicId: "",
       title: "Aimer comme Jésus a aimé",
@@ -135,6 +145,7 @@ export default function PredicationsPage() {
       description: "L'amour est au cœur de l'Évangile. Ce message nous défie à aimer non seulement en paroles, mais en actes et en vérité.",
       category: "Amour",
       scripture: "Jean 13:34-35",
+      videoUrl: "",
       order: 6,
     },
   ];
