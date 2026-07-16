@@ -26,12 +26,15 @@ export default function PredicationsPage() {
     async function fetchData() {
       const sermonsRes = await getSermons();
       if (sermonsRes.success) {
-        const sermonsWithDates = sermonsRes.sermons.map(sermon => ({
-          ...sermon,
-          date: sermon.date instanceof Date ? sermon.date.toLocaleDateString('fr-FR') : 
-                sermon.date?.seconds ? new Date(sermon.date.seconds * 1000).toLocaleDateString('fr-FR') : 
-                sermon.date || ''
-        }));
+        const sermonsWithDates = sermonsRes.sermons.map(sermon => {
+          const date = sermon.date as any;
+          return {
+            ...sermon,
+            date: date?.toDate ? date.toDate().toLocaleDateString('fr-FR') : 
+                  date?.seconds ? new Date(date.seconds * 1000).toLocaleDateString('fr-FR') : 
+                  date || ''
+          };
+        });
         setSermons(sermonsWithDates);
       }
       setLoading(false);
