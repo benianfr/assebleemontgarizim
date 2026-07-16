@@ -59,6 +59,7 @@ export default function EvenementsPage() {
 
   const displayUpcomingEvents = upcomingEvents.length > 0 ? upcomingEvents : [
     {
+      id: "1",
       imageUrl: "",
       imagePublicId: "",
       date: "12 juillet 2026",
@@ -70,6 +71,7 @@ export default function EvenementsPage() {
       order: 1,
     },
     {
+      id: "2",
       imageUrl: "",
       imagePublicId: "",
       date: "26 juillet 2026",
@@ -81,6 +83,7 @@ export default function EvenementsPage() {
       order: 2,
     },
     {
+      id: "3",
       imageUrl: "",
       imagePublicId: "",
       date: "9 août 2026",
@@ -92,6 +95,7 @@ export default function EvenementsPage() {
       order: 3,
     },
     {
+      id: "4",
       imageUrl: "",
       imagePublicId: "",
       date: "20 août 2026",
@@ -103,6 +107,7 @@ export default function EvenementsPage() {
       order: 4,
     },
     {
+      id: "5",
       imageUrl: "",
       imagePublicId: "",
       date: "3 septembre 2026",
@@ -116,9 +121,9 @@ export default function EvenementsPage() {
   ];
 
   const displayPastEvents = pastEvents.length > 0 ? pastEvents : [
-    { imageUrl: "", imagePublicId: "", date: "Juin 2026", title: "Semaine de jeûne et prière", description: "Une semaine consacrée à la prière et au jeûne pour l'église et la nation. Plusieurs centaines de participants ont répondu à l'appel.", order: 1 },
-    { imageUrl: "", imagePublicId: "", date: "Mai 2026", title: "Fête de la Pentecôte", description: "Célébration spéciale avec baptêmes et repas communautaire. 15 nouvelles personnes ont été baptisées lors de cette journée mémorable.", order: 2 },
-    { imageUrl: "", imagePublicId: "", date: "Avril 2026", title: "Carême Pâques", description: "Période de 40 jours de réflexion et de prière menant à la célébration de Pâques. Enseignements quotidiens et soirées spéciales.", order: 3 },
+    { id: "1", imageUrl: "", imagePublicId: "", date: "Juin 2026", title: "Semaine de jeûne et prière", description: "Une semaine consacrée à la prière et au jeûne pour l'église et la nation. Plusieurs centaines de participants ont répondu à l'appel.", order: 1 },
+    { id: "2", imageUrl: "", imagePublicId: "", date: "Mai 2026", title: "Fête de la Pentecôte", description: "Célébration spéciale avec baptêmes et repas communautaire. 15 nouvelles personnes ont été baptisées lors de cette journée mémorable.", order: 2 },
+    { id: "3", imageUrl: "", imagePublicId: "", date: "Avril 2026", title: "Carême Pâques", description: "Période de 40 jours de réflexion et de prière menant à la célébration de Pâques. Enseignements quotidiens et soirées spéciales.", order: 3 },
   ];
 
   return (
