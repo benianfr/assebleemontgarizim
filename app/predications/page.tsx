@@ -30,8 +30,9 @@ export default function PredicationsPage() {
           const date = sermon.date as any;
           return {
             ...sermon,
-            date: date?.toDate ? date.toDate().toLocaleDateString('fr-FR') : 
-                  date?.seconds ? new Date(date.seconds * 1000).toLocaleDateString('fr-FR') : 
+            videoUrl: sermon.videoUrl ?? "",
+            date: date?.toDate ? date.toDate().toLocaleDateString('fr-FR') :
+                  date?.seconds ? new Date(date.seconds * 1000).toLocaleDateString('fr-FR') :
                   date || ''
           };
         });
