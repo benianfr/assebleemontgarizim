@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent, type ChangeEvent } from "react";
 import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import { submitTestimonial, getApprovedTestimonials, Testimonial } from "@/lib/firestore";
@@ -53,7 +53,7 @@ export default function TemoignagesPage() {
     setLoading(false);
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
