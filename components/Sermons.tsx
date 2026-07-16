@@ -22,44 +22,7 @@ export default function Sermons() {
     fetchData();
   }, []);
 
-  const displaySermons = sermons.length > 0 ? sermons : [
-    {
-      imageUrl: "",
-      imagePublicId: "",
-      title: "Marcher par la foi, non par la vue",
-      preacher: "Pasteur Jean Koffi",
-      date: "28 juin 2026",
-      duration: "42 min",
-      description: "",
-      category: "latest",
-      scripture: "",
-      order: 1,
-    },
-    {
-      imageUrl: "",
-      imagePublicId: "",
-      title: "La grâce qui transforme",
-      preacher: "Pasteur Marie Aké",
-      date: "21 juin 2026",
-      duration: "38 min",
-      description: "",
-      category: "latest",
-      scripture: "",
-      order: 2,
-    },
-    {
-      imageUrl: "",
-      imagePublicId: "",
-      title: "Espérer contre toute espérance",
-      preacher: "Pasteur Jean Koffi",
-      date: "14 juin 2026",
-      duration: "45 min",
-      description: "",
-      category: "latest",
-      scripture: "",
-      order: 3,
-    },
-  ];
+  const displaySermons = sermons;
 
   return (
     <section className="section" id="predications" ref={ref}>
