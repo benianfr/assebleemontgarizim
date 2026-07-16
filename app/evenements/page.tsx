@@ -57,74 +57,8 @@ export default function EvenementsPage() {
     );
   }
 
-  const displayUpcomingEvents = upcomingEvents.length > 0 ? upcomingEvents : [
-    {
-      id: "1",
-      imageUrl: "",
-      imagePublicId: "",
-      date: "12 juillet 2026",
-      title: "Nuit de prière et de louange",
-      place: "Temple principal",
-      time: "19h00 — 23h00",
-      description: "Une soirée dédiée à la prière collective et à l'adoration, ouverte à tous. Venez expérimenter la présence de Dieu à travers la louange et l'intercession.",
-      category: "Prière",
-      order: 1,
-    },
-    {
-      id: "2",
-      imageUrl: "",
-      imagePublicId: "",
-      date: "26 juillet 2026",
-      title: "Camp d'été de la jeunesse",
-      place: "Centre Mont Garizim",
-      time: "3 jours",
-      description: "Un temps fort de formation, de fraternité et de repos pour les jeunes. Au programme : enseignements, activités de groupe et moments de détente.",
-      category: "Jeunesse",
-      order: 2,
-    },
-    {
-      id: "3",
-      imageUrl: "",
-      imagePublicId: "",
-      date: "9 août 2026",
-      title: "Journée des familles",
-      place: "Jardin de l'église",
-      time: "10h00 — 17h00",
-      description: "Un moment convivial pour célébrer et renforcer les liens familiaux. Pique-nique, jeux et partage pour toute la famille.",
-      category: "Familles",
-      order: 3,
-    },
-    {
-      id: "4",
-      imageUrl: "",
-      imagePublicId: "",
-      date: "20 août 2026",
-      title: "Conférence sur la famille",
-      place: "Salle principale",
-      time: "14h00 — 17h00",
-      description: "Conférence avec des experts sur les défis familiaux contemporains et les réponses bibliques. Ouvert à tous, couples et parents.",
-      category: "Formation",
-      order: 4,
-    },
-    {
-      id: "5",
-      imageUrl: "",
-      imagePublicId: "",
-      date: "3 septembre 2026",
-      title: "Rentrée des groupes de maison",
-      place: "Divers lieux",
-      time: "18h30",
-      description: "Reprise des rencontres hebdomadaires des groupes de maison. Une occasion idéale pour rejoindre un groupe et développer des relations.",
-      category: "Groupes",
-      order: 5,
-    },
-  ];
-
-  const displayPastEvents = pastEvents.length > 0 ? pastEvents : [
-    { id: "1", imageUrl: "", imagePublicId: "", date: "Juin 2026", title: "Semaine de jeûne et prière", description: "Une semaine consacrée à la prière et au jeûne pour l'église et la nation. Plusieurs centaines de participants ont répondu à l'appel.", order: 1 },
-    { id: "2", imageUrl: "", imagePublicId: "", date: "Mai 2026", title: "Fête de la Pentecôte", description: "Célébration spéciale avec baptêmes et repas communautaire. 15 nouvelles personnes ont été baptisées lors de cette journée mémorable.", order: 2 },
-    { id: "3", imageUrl: "", imagePublicId: "", date: "Avril 2026", title: "Carême Pâques", description: "Période de 40 jours de réflexion et de prière menant à la célébration de Pâques. Enseignements quotidiens et soirées spéciales.", order: 3 },
-  ];
+  const displayUpcomingEvents = upcomingEvents;
+  const displayPastEvents = pastEvents;
 
   return (
     <>
