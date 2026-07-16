@@ -11,7 +11,7 @@ const navLinks = [
   { href: "/predications", label: "Prédications" },
   { href: "/galerie", label: "Galerie" },
   { href: "/temoignages", label: "Témoignages" },
-  { href: "/contact", label: "Contact" },
+  { href: "/librairie", label: "Librairie" },
 ];
 
 export default function SiteHeader() {
