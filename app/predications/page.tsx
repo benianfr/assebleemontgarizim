@@ -10,17 +10,8 @@ export default function PredicationsPage() {
   const ref1 = useRevealOnScroll();
   const [sermons, setSermons] = useState<Sermon[]>([]);
   const [selectedSermon, setSelectedSermon] = useState<Sermon | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>("Tous");
   const [loading, setLoading] = useState(true);
-
-  const categories = [
-    { name: "Tous", count: 24 },
-    { name: "Foi", count: 6 },
-    { name: "Amour", count: 5 },
-    { name: "Grâce", count: 4 },
-    { name: "Prière", count: 4 },
-    { name: "Espérance", count: 3 },
-    { name: "Identité", count: 2 },
-  ];
 
   useEffect(() => {
     async function fetchData() {
@@ -44,6 +35,25 @@ export default function PredicationsPage() {
     fetchData();
   }, []);
 
+  // Generate categories dynamically from sermons
+  const categories = (() => {
+    const categoryCount = sermons.reduce((acc, sermon) => {
+      const category = sermon.category || "Autre";
+      acc[category] = (acc[category] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    const categoryArray = Object.entries(categoryCount).map(([name, count]) => ({ name, count }));
+    categoryArray.sort((a, b) => b.count - a.count);
+
+    return [{ name: "Tous", count: sermons.length }, ...categoryArray];
+  })();
+
+  // Filter sermons by selected category
+  const filteredSermons = selectedCategory === "Tous"
+    ? sermons
+    : sermons.filter(sermon => sermon.category === selectedCategory);
+
   const getYouTubeVideoId = (url: string) => {
     if (!url) return null;
     const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
@@ -65,7 +75,6 @@ export default function PredicationsPage() {
     );
   }
 
-  const displaySermons = sermons;
 
   return (
     <>
@@ -98,12 +107,13 @@ export default function PredicationsPage() {
               {categories.map((cat) => (
                 <button
                   key={cat.name}
+                  onClick={() => setSelectedCategory(cat.name)}
                   style={{
                     padding: "10px 24px",
                     borderRadius: "100px",
-                    border: cat.name === "Tous" ? "none" : "1.5px solid rgba(10,42,77,0.2)",
-                    background: cat.name === "Tous" ? "var(--deep-blue)" : "transparent",
-                    color: cat.name === "Tous" ? "#fff" : "var(--deep-blue)",
+                    border: cat.name === selectedCategory ? "none" : "1.5px solid rgba(10,42,77,0.2)",
+                    background: cat.name === selectedCategory ? "var(--deep-blue)" : "transparent",
+                    color: cat.name === selectedCategory ? "#fff" : "var(--deep-blue)",
                     fontSize: "14px",
                     fontWeight: 600,
                     cursor: "pointer",
@@ -125,7 +135,7 @@ export default function PredicationsPage() {
               <h2>Dernières prédications</h2>
             </div>
             <div className="scroll-horizontal">
-              {displaySermons.map((sermon) => (
+              {filteredSermons.map((sermon) => (
                 <div className="card" key={sermon.title} onClick={() => setSelectedSermon(sermon)} style={{ cursor: "pointer" }}>
                   <div className="card-media">
                     {sermon.imageUrl ? (
