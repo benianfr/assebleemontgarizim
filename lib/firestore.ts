@@ -645,3 +645,39 @@ export async function updateAboutSection(item: AboutSection) {
     return { success: false, error };
   }
 }
+
+// Popup document
+export interface Popup {
+  enabled: boolean;
+  imageUrl: string;
+  imagePublicId: string;
+  title: string;
+  description: string;
+  buttonText: string;
+  buttonLink: string;
+  showDelay: number; // in seconds
+}
+
+export async function getPopup() {
+  try {
+    const docRef = doc(db, "home", "popup");
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return { success: true, popup: docSnap.data() as Popup };
+    }
+    return { success: false, error: "Popup not found", popup: null };
+  } catch (error) {
+    console.error("Error fetching popup:", error);
+    return { success: false, error, popup: null };
+  }
+}
+
+export async function updatePopup(item: Popup) {
+  try {
+    await setDoc(doc(db, "home", "popup"), item);
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating popup:", error);
+    return { success: false, error };
+  }
+}
