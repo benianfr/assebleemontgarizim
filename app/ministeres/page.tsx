@@ -44,69 +44,6 @@ export default function MinisteresPage() {
     );
   }
 
-  const displayMinistries = ministries.length > 0 ? ministries : [
-    {
-      imageUrl: "",
-      imagePublicId: "",
-      title: "Jeunesse",
-      description: "Un espace dynamique où les jeunes affermissent leur foi et tissent des amitiés durables. Nous organisons des rencontres hebdomadaires, des camps et des événements spéciaux pour aider les jeunes à grandir spirituellement et socialement.",
-      schedule: "Samedis 16h00 — 18h00",
-      leader: "David Yao",
-      order: 1,
-    },
-    {
-      imageUrl: "",
-      imagePublicId: "",
-      title: "Enfants",
-      description: "Un accueil chaleureux et sécurisé pour transmettre les valeurs de l'Évangile aux plus petits. Notre programme adapté à chaque âge permet aux enfants de découvrir la Bible de manière ludique et engageante.",
-      schedule: "Dimanches 9h30 — 11h30",
-      leader: "Grace N'Guessan",
-      order: 2,
-    },
-    {
-      imageUrl: "",
-      imagePublicId: "",
-      title: "Louange",
-      description: "Une équipe passionnée qui conduit l'assemblée dans une adoration sincère et vivante. La louange est au cœur de nos cultes, créant une atmosphère où la présence de Dieu peut se manifester.",
-      schedule: "Répétitions mercredis 18h00",
-      leader: "Marc Kouassi",
-      order: 3,
-    },
-    {
-      imageUrl: "",
-      imagePublicId: "",
-      title: "Intercession",
-      description: "Des moments de prière collective pour porter les besoins de l'église, de la nation et du monde. Nous croyons en la puissance de la prière pour transformer les vies et les situations.",
-      schedule: "Mercredis 19h00 — 20h00",
-      leader: "Pasteur Emmanuel Kouassi",
-      order: 4,
-    },
-    {
-      imageUrl: "",
-      imagePublicId: "",
-      title: "Évangélisation",
-      description: "Aller vers les autres pour partager l'espérance qui nous anime, avec amour et respect. Nos équipes organisent des actions dans les quartiers, les hôpitaux et les écoles.",
-      schedule: "Samedis selon planning",
-      leader: "Philippe Assamoi",
-      order: 5,
-    },
-    {
-      imageUrl: "",
-      imagePublicId: "",
-      title: "Familles",
-      description: "Un accompagnement pour renforcer les couples et les liens intergénérationnels. Nous proposons des sessions de conseil, des ateliers et des événements pour soutenir les familles dans leur cheminement.",
-      schedule: "2ème samedi du mois",
-      leader: "Pasteur Marie-Claire Diallo",
-      order: 6,
-    },
-  ];
-
-  const displayValues = values.length > 0 ? values : [
-    { title: "Service", text: "Chaque ministère est une opportunité de servir Dieu et les autres avec humilité et amour.", order: 1 },
-    { title: "Excellence", text: "Nous nous efforçons de donner le meilleur de nous-mêmes dans tout ce que nous entreprenons.", order: 2 },
-    { title: "Communauté", text: "Les ministères sont des lieux de vie où des relations profondes et authentiques se construisent.", order: 3 },
-    { title: "Croissance", text: "Nous encourageons chaque personne à grandir dans sa foi et à développer ses talents.", order: 4 },
-  ];
 
   return (
     <>
@@ -174,7 +111,7 @@ export default function MinisteresPage() {
               <h2>Ce qui guide notre service</h2>
             </div>
             <div className="values-scroll">
-              {displayValues.map((value) => (
+              {values.map((value) => (
                 <div className="value-card" key={value.title}>
                   <h3>{value.title}</h3>
                   <p>{value.text}</p>
