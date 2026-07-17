@@ -233,7 +233,10 @@ export async function getMinistries() {
   try {
     const q = query(collection(db, "ministries"), orderBy("order", "asc"));
     const querySnapshot = await getDocs(q);
-    const ministries = querySnapshot.docs.map((doc) => doc.data() as Ministry);
+    const ministries = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    } as Ministry));
     return { success: true, ministries };
   } catch (error) {
     console.error("Error fetching ministries:", error);
@@ -267,7 +270,10 @@ export async function getValues() {
   try {
     const q = query(collection(db, "values"), orderBy("order", "asc"));
     const querySnapshot = await getDocs(q);
-    const values = querySnapshot.docs.map((doc) => doc.data() as Value);
+    const values = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    } as Value));
     return { success: true, values };
   } catch (error) {
     console.error("Error fetching values:", error);
@@ -455,7 +461,10 @@ export async function getGalleryImages() {
   try {
     const q = query(collection(db, "gallery"), orderBy("order", "asc"));
     const querySnapshot = await getDocs(q);
-    const images = querySnapshot.docs.map((doc) => doc.data() as GalleryImage);
+    const images = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    } as GalleryImage));
     return { success: true, images };
   } catch (error) {
     console.error("Error fetching gallery images:", error);
