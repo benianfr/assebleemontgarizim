@@ -22,7 +22,7 @@ export default function AdminGalerie() {
   };
 
   const handleDeleteImage = async (id: string) => {
-    await deleteDoc(doc(collection(db, "gallery"), id));
+    await deleteDoc(doc(db, "gallery", id));
     fetchData();
   };
 

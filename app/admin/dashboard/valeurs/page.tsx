@@ -21,7 +21,7 @@ export default function AdminValeurs() {
   };
 
   const handleDeleteValue = async (id: string) => {
-    await deleteDoc(doc(collection(db, "values"), id));
+    await deleteDoc(doc(db, "values", id));
     fetchData();
   };
 

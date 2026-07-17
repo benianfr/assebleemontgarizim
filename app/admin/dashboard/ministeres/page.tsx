@@ -22,7 +22,7 @@ export default function AdminMinisteres() {
   };
 
   const handleDeleteMinistry = async (id: string) => {
-    await deleteDoc(doc(collection(db, "ministries"), id));
+    await deleteDoc(doc(db, "ministries", id));
     fetchData();
   };
 
