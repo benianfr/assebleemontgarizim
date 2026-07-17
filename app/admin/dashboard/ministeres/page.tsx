@@ -22,8 +22,15 @@ export default function AdminMinisteres() {
   };
 
   const handleDeleteMinistry = async (id: string) => {
-    await deleteDoc(doc(db, "ministries", id));
-    fetchData();
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce ministère ?")) {
+      try {
+        await deleteDoc(doc(db, "ministries", id));
+        fetchData();
+      } catch (error) {
+        console.error("Erreur lors de la suppression:", error);
+        alert("Erreur lors de la suppression du ministère.");
+      }
+    }
   };
 
   const handleAddMinistry = async () => {
