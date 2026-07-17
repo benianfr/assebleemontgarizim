@@ -618,6 +618,8 @@ export interface AboutSection {
   description: string;
   years: number;
   yearsText: string;
+  imageUrl: string;
+  imagePublicId: string;
 }
 
 export async function getAboutSection() {

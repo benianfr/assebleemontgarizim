@@ -38,7 +38,15 @@ export default function About() {
     <section className="section" id="about" ref={ref}>
       <div className="container about-grid">
         <div className="about-media reveal">
-          <div className="ph"></div>
+          {aboutSection?.imageUrl ? (
+            <img
+              src={aboutSection.imageUrl}
+              alt="Notre église"
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
+          ) : (
+            <div className="ph"></div>
+          )}
           <div className="tag">
             <strong>{aboutSection?.years || 18} années</strong>
             <span>{aboutSection?.yearsText || "au service de la communauté d'Abidjan"}</span>

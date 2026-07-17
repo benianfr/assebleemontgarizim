@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getAboutSection, updateAboutSection, AboutSection } from "@/lib/firestore";
 import { PageHeader, Card, Button, Field, Input, Textarea } from "@/components/admin/AdminUI";
+import ImageUpload from "@/components/ImageUpload";
 
 export default function AdminNotreEglise() {
   const [aboutSection, setAboutSection] = useState<AboutSection | null>(null);
@@ -25,6 +26,8 @@ export default function AdminNotreEglise() {
         description: "Depuis notre fondation, l'Assemblée Mont Garizim accompagne des hommes et des femmes de toutes générations dans leur cheminement spirituel. Nous croyons en une foi vivante, incarnée dans la prière, l'étude de la Parole et le service du prochain.",
         years: 18,
         yearsText: "au service de la communauté d'Abidjan",
+        imageUrl: "",
+        imagePublicId: "",
       });
     }
     setLoading(false);
@@ -97,6 +100,15 @@ export default function AdminNotreEglise() {
                 }
               />
             </Field>
+            <Field label="Image">
+              <ImageUpload
+                onImageUploaded={(url, publicId) =>
+                  setAboutSection({ ...aboutSection, imageUrl: url, imagePublicId: publicId })
+                }
+                currentImage={aboutSection.imageUrl}
+                folder="about"
+              />
+            </Field>
             <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
               <Button onClick={handleSave}>Enregistrer</Button>
               <Button variant="ghost" onClick={() => setEditing(false)}>
@@ -127,6 +139,18 @@ export default function AdminNotreEglise() {
             <div>
               <strong>Texte des années</strong>
               <p style={{ marginTop: 4 }}>{aboutSection.yearsText}</p>
+            </div>
+            <div>
+              <strong>Image</strong>
+              {aboutSection.imageUrl ? (
+                <img
+                  src={aboutSection.imageUrl}
+                  alt="Notre église"
+                  style={{ marginTop: 8, maxWidth: "300px", borderRadius: "8px" }}
+                />
+              ) : (
+                <p style={{ marginTop: 4, color: "var(--text-muted)" }}>Aucune image</p>
+              )}
             </div>
             <Button onClick={() => setEditing(true)}>Modifier</Button>
           </div>
