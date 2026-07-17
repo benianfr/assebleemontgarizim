@@ -21,35 +21,13 @@ export default function Testimonials() {
     fetchData();
   }, []);
 
-  const displayTestimonials = testimonials.length > 0 ? testimonials.map(t => ({
+  const displayTestimonials = testimonials.map(t => ({
     text: t.temoignage,
     name: `${t.prenom} ${t.nom}`,
     role: t.titre,
     approved: t.approved,
     createdAt: t.createdAt,
-  })) : [
-    {
-      text: "Rejoindre cette église a transformé ma vie de famille. Nous avons trouvé une communauté qui nous porte réellement.",
-      name: "Awa Traoré",
-      role: "Membre depuis 2019",
-      approved: true,
-      createdAt: new Date().toISOString(),
-    },
-    {
-      text: "L'accompagnement des jeunes ici est exceptionnel. J'ai grandi dans ma foi entourée de mentors bienveillants.",
-      name: "David Yao",
-      role: "Groupe Jeunesse",
-      approved: true,
-      createdAt: new Date().toISOString(),
-    },
-    {
-      text: "Un enseignement biblique profond et une communion fraternelle sincère. Je m'y sens chez moi.",
-      name: "Grace N'Guessan",
-      role: "Membre depuis 2015",
-      approved: true,
-      createdAt: new Date().toISOString(),
-    },
-  ];
+  }));
 
   useEffect(() => {
     const id = setInterval(() => {
