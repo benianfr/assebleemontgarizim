@@ -56,13 +56,27 @@ export default function AdminAPropos() {
   };
 
   const handleDeleteHistory = async (year: string) => {
-    await deleteDoc(doc(collection(db, "history"), year));
-    fetchData();
+    if (confirm("Êtes-vous sûr de vouloir supprimer cet événement historique ?")) {
+      try {
+        await deleteDoc(doc(db, "history", year));
+        fetchData();
+      } catch (error) {
+        console.error("Erreur lors de la suppression:", error);
+        alert("Erreur lors de la suppression de l'événement historique.");
+      }
+    }
   };
 
   const handleDeleteLocation = async (name: string) => {
-    await deleteDoc(doc(collection(db, "locations"), name));
-    fetchData();
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce lieu de culte ?")) {
+      try {
+        await deleteDoc(doc(db, "locations", name));
+        fetchData();
+      } catch (error) {
+        console.error("Erreur lors de la suppression:", error);
+        alert("Erreur lors de la suppression du lieu de culte.");
+      }
+    }
   };
 
   const handleEditHistory = (item: HistoryItem) => {
@@ -70,19 +84,36 @@ export default function AdminAPropos() {
   };
 
   const handleSaveHistory = async (item: HistoryItem) => {
-    await setDoc(doc(collection(db, "history"), item.year), item);
-    setEditingHistory(null);
-    fetchData();
+    try {
+      await setDoc(doc(db, "history", item.year), item);
+      setEditingHistory(null);
+      fetchData();
+    } catch (error) {
+      console.error("Erreur lors de la modification:", error);
+      alert("Erreur lors de la modification de l'événement historique.");
+    }
   };
 
   const handleEditLocation = (location: Location) => {
-    setEditingLocation(location);
+    setEditingLocation({ ...location, originalName: location.name } as Location & { originalName: string });
   };
 
-  const handleSaveLocation = async (location: Location) => {
-    await setDoc(doc(collection(db, "locations"), location.name), location);
-    setEditingLocation(null);
-    fetchData();
+  const handleSaveLocation = async (location: Location & { originalName?: string }) => {
+    const originalName = location.originalName || location.name;
+    const newName = location.name;
+
+    try {
+      // If name changed, delete old document and create new one
+      if (originalName !== newName) {
+        await deleteDoc(doc(db, "locations", originalName));
+      }
+      await setDoc(doc(db, "locations", newName), location);
+      setEditingLocation(null);
+      fetchData();
+    } catch (error) {
+      console.error("Erreur lors de la modification:", error);
+      alert("Erreur lors de la modification du lieu de culte.");
+    }
   };
 
   const handleSaveFounder = async (founderData: Founder) => {
@@ -344,6 +375,9 @@ export default function AdminAPropos() {
                   <Field label="Nom">
                   <Input value={editingLocation.name} onChange={(e) => setEditingLocation({ ...editingLocation, name: e.target.value })} />
                 </Field>
+                <p style={{ fontSize: "12px", color: "#666", marginTop: "4px" }}>
+                  Attention : Si vous modifiez le nom, l'ancien document sera supprimé et remplacé.
+                </p>
                 <Field label="Pasteur">
                   <Input value={editingLocation.pastor} onChange={(e) => setEditingLocation({ ...editingLocation, pastor: e.target.value })} />
                 </Field>
