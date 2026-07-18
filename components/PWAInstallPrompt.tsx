@@ -9,9 +9,17 @@ export default function PWAInstallPrompt() {
   const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
-    // Check if user already dismissed
+    // Check if user already dismissed or app is installed
     const wasDismissed = localStorage.getItem("pwa-install-dismissed");
-    if (wasDismissed) {
+    const isInstalled = localStorage.getItem("pwa-installed");
+    if (wasDismissed || isInstalled) {
+      setDismissed(true);
+      return;
+    }
+
+    // Check if app is already running in standalone mode (installed)
+    if (window.matchMedia("(display-mode: standalone)").matches) {
+      localStorage.setItem("pwa-installed", "true");
       setDismissed(true);
       return;
     }
@@ -21,7 +29,7 @@ export default function PWAInstallPrompt() {
     setIsIOS(isIOSDevice);
 
     // For iOS, show prompt after delay
-    if (isIOSDevice && !window.matchMedia("(display-mode: standalone)").matches) {
+    if (isIOSDevice) {
       const timer = setTimeout(() => {
         setShowPrompt(true);
       }, 5000);
@@ -35,10 +43,19 @@ export default function PWAInstallPrompt() {
       setShowPrompt(true);
     };
 
+    // Listen for appinstalled event to mark app as installed
+    const handleAppInstalled = () => {
+      localStorage.setItem("pwa-installed", "true");
+      setShowPrompt(false);
+      setDeferredPrompt(null);
+    };
+
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    window.addEventListener("appinstalled", handleAppInstalled);
 
     return () => {
       window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+      window.removeEventListener("appinstalled", handleAppInstalled);
     };
   }, []);
 
