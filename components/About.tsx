@@ -141,27 +141,20 @@ export default function About() {
         >
           {/* Background Image */}
           {galleryImages.length > 0 && (
-            <div 
+            <img
+              src={galleryImages[0].imageUrl}
+              alt="Background"
               style={{
                 position: "absolute",
                 top: 0,
                 right: 0,
-                width: "50%",
+                width: "100%",
                 height: "100%",
+                objectFit: "cover",
                 opacity: 0.15,
                 pointerEvents: "none",
               }}
-            >
-              <img
-                src={galleryImages[0].imageUrl}
-                alt="Background"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                }}
-              />
-            </div>
+            />
           )}
           
           <div style={{ color: "white", position: "relative", zIndex: 1 }}>
