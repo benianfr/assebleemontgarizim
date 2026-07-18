@@ -20,9 +20,14 @@ export default function Events() {
 
   useEffect(() => {
     async function fetchData() {
+      console.log("Fetching events...");
       const result = await getUpcomingEvents();
+      console.log("Events result:", result);
       if (result.success) {
         setEvents(result.events);
+        console.log("Events set:", result.events);
+      } else {
+        console.error("Failed to fetch events:", result.error);
       }
       setLoading(false);
     }
@@ -43,31 +48,44 @@ export default function Events() {
           <h2>Vivez des moments forts avec nous</h2>
         </div>
 
-        <div className="scroll-horizontal">
-          {events.map((e, i) => (
-            <div className={`card reveal ${delays[i % 3]}`} key={e.title}>
-              <div className="card-media">
-                {e.imageUrl ? (
-                  <img src={e.imageUrl} alt={e.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                ) : (
-                  <div className={`ph ph-1`}></div>
-                )}
-              </div>
-              <div className="card-body">
-                <span className="tl-date">{formatDate(e.date)}</span>
-                <h3>{e.title}</h3>
-                <div className="tl-meta">
-                  <span>{e.place}</span>
-                  <span>{e.time}</span>
+        {loading ? (
+          <div style={{ textAlign: "center", padding: "40px" }}>
+            <p>Chargement des événements...</p>
+          </div>
+        ) : events.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "40px" }}>
+            <p>Aucun événement à venir pour le moment.</p>
+            <a href="/evenements" style={{ color: "#d4a017", textDecoration: "underline", marginTop: "10px", display: "inline-block" }}>
+              Voir tous les événements
+            </a>
+          </div>
+        ) : (
+          <div className="scroll-horizontal">
+            {events.map((e, i) => (
+              <div className={`card reveal ${delays[i % 3]}`} key={e.id || e.title}>
+                <div className="card-media">
+                  {e.imageUrl ? (
+                    <img src={e.imageUrl} alt={e.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  ) : (
+                    <div className={`ph ph-1`}></div>
+                  )}
                 </div>
-                <p>{e.description}</p>
-                <a href="/evenements" className="card-link">
-                  Voir les détails <span className="arrow">→</span>
-                </a>
+                <div className="card-body">
+                  <span className="tl-date">{formatDate(e.date)}</span>
+                  <h3>{e.title}</h3>
+                  <div className="tl-meta">
+                    <span>{e.place}</span>
+                    <span>{e.time}</span>
+                  </div>
+                  <p>{e.description}</p>
+                  <a href="/evenements" className="card-link">
+                    Voir les détails <span className="arrow">→</span>
+                  </a>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
