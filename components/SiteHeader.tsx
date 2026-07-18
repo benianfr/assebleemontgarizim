@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Logo from "./Logo";
+import PWAInstallPrompt from "./PWAInstallPrompt";
 
 const navLinks = [
   { href: "/", label: "Accueil" },
@@ -115,6 +116,7 @@ export default function SiteHeader() {
           Faire un don
         </a>
       </div>
+      <PWAInstallPrompt />
     </>
   );
 }
