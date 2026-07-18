@@ -1,12 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function PWAInstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showPrompt, setShowPrompt] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
   const [dismissed, setDismissed] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const playSound = () => {
+    try {
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      oscillator.frequency.value = 800;
+      oscillator.type = "sine";
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.3);
+    } catch (error) {
+      console.error("Error playing sound:", error);
+    }
+  };
 
   useEffect(() => {
     // Check if user already dismissed or app is installed
@@ -28,19 +50,27 @@ export default function PWAInstallPrompt() {
     const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
     setIsIOS(isIOSDevice);
 
-    // For iOS, show prompt after delay
-    if (isIOSDevice) {
-      const timer = setTimeout(() => {
-        setShowPrompt(true);
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
+    // Show prompt every 5 seconds with sound
+    const showNotification = () => {
+      setShowPrompt(true);
+      playSound();
+    };
 
-    // For Android/Desktop, listen for beforeinstallprompt
+    // Initial delay of 5 seconds
+    const initialTimer = setTimeout(() => {
+      showNotification();
+      // Then show every 5 seconds
+      intervalRef.current = setInterval(() => {
+        showNotification();
+      }, 5000);
+    }, 5000);
+
+    // For Android/Desktop, also listen for beforeinstallprompt
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e);
       setShowPrompt(true);
+      playSound();
     };
 
     // Listen for appinstalled event to mark app as installed
@@ -48,12 +78,19 @@ export default function PWAInstallPrompt() {
       localStorage.setItem("pwa-installed", "true");
       setShowPrompt(false);
       setDeferredPrompt(null);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
     window.addEventListener("appinstalled", handleAppInstalled);
 
     return () => {
+      clearTimeout(initialTimer);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
       window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
       window.removeEventListener("appinstalled", handleAppInstalled);
     };
@@ -74,6 +111,9 @@ export default function PWAInstallPrompt() {
     setShowPrompt(false);
     setDismissed(true);
     localStorage.setItem("pwa-install-dismissed", "true");
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
   };
 
   if (!showPrompt || dismissed) return null;
