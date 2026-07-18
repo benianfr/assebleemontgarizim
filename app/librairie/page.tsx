@@ -3,17 +3,24 @@
 import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import { useRevealOnScroll } from "@/components/useRevealOnScroll";
-import { getContactInfo, ContactInfo } from "@/lib/firestore";
+import { getContactInfo, ContactInfo, getBooks, Book } from "@/lib/firestore";
 import { useEffect, useState } from "react";
 
 export default function LibrairiePage() {
   const ref = useRevealOnScroll();
   const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
+  const [books, setBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
-      const result = await getContactInfo();
-      if (result.success) setContactInfo(result.contactInfo);
+      const [contactRes, booksRes] = await Promise.all([
+        getContactInfo(),
+        getBooks(),
+      ]);
+      if (contactRes.success) setContactInfo(contactRes.contactInfo);
+      if (booksRes.success) setBooks(booksRes.books);
+      setLoading(false);
     }
     fetchData();
   }, []);
@@ -55,51 +62,42 @@ export default function LibrairiePage() {
             </div>
 
             <div className="scroll-horizontal">
-              {[
-                {
-                  title: "La marche par la foi",
-                  author: "Pasteur Jean Koffi",
-                  description: "Un guide pratique pour développer une foi authentique au quotidien.",
-                  price: "5 000 FCFA"
-                },
-                {
-                  title: "La puissance de la prière",
-                  author: "Pasteur Marie Aké",
-                  description: "Découvrez les principes bibliques d'une vie de prière efficace.",
-                  price: "4 500 FCFA"
-                },
-                {
-                  title: "L'identité en Christ",
-                  author: "Pasteur Emmanuel Kouassi",
-                  description: "Comprendre qui vous êtes en Jésus-Christ change tout.",
-                  price: "6 000 FCFA"
-                },
-              ].map((book, index) => (
-                <div className="card reveal" key={book.title} style={{ animationDelay: `${index * 100}ms` }}>
-                  <div className="card-media">
-                    <div className="ph ph-1"></div>
-                  </div>
-                  <div className="card-body">
-                    <h3>{book.title}</h3>
-                    <p style={{ color: "var(--text-mid)", fontSize: "14px", marginBottom: "8px" }}>
-                      {book.author}
-                    </p>
-                    <p style={{ fontSize: "13.5px", lineHeight: "1.65", marginBottom: "16px" }}>
-                      {book.description}
-                    </p>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ fontWeight: 700, color: "var(--gold)" }}>{book.price}</span>
-                      <button 
-                        className="btn btn-navy" 
-                        style={{ padding: "8px 16px", fontSize: "14px" }}
-                        onClick={() => handleOrder(book.title, book.price)}
-                      >
-                        Commander
-                      </button>
+              {loading ? (
+                <div>Chargement...</div>
+              ) : books.length === 0 ? (
+                <div>Aucun livre disponible pour le moment.</div>
+              ) : (
+                books.map((book, index) => (
+                  <div className="card reveal" key={book.id} style={{ animationDelay: `${index * 100}ms` }}>
+                    <div className="card-media">
+                      {book.imageUrl ? (
+                        <img src={book.imageUrl} alt={book.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      ) : (
+                        <div className="ph ph-1"></div>
+                      )}
+                    </div>
+                    <div className="card-body">
+                      <h3>{book.title}</h3>
+                      <p style={{ color: "var(--text-mid)", fontSize: "14px", marginBottom: "8px" }}>
+                        {book.author}
+                      </p>
+                      <p style={{ fontSize: "13.5px", lineHeight: "1.65", marginBottom: "16px" }}>
+                        {book.description}
+                      </p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontWeight: 700, color: "var(--gold)" }}>{book.price}</span>
+                        <button 
+                          className="btn btn-navy" 
+                          style={{ padding: "8px 16px", fontSize: "14px" }}
+                          onClick={() => handleOrder(book.title, book.price)}
+                        >
+                          Commander
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
         </section>

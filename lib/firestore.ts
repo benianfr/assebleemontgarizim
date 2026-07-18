@@ -1,5 +1,5 @@
 import { db } from "./firebase";
-import { collection, addDoc, getDocs, query, orderBy, limit, Timestamp, doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
+import { collection, addDoc, getDocs, query, orderBy, limit, Timestamp, doc, getDoc, setDoc, onSnapshot, deleteDoc } from "firebase/firestore";
 
 export { doc, onSnapshot, collection, getDocs, query, orderBy };
 
@@ -687,6 +687,63 @@ export async function updatePopup(item: Popup) {
     return { success: true };
   } catch (error) {
     console.error("Error updating popup:", error);
+    return { success: false, error };
+  }
+}
+
+// Books collection
+export interface Book {
+  id: string;
+  title: string;
+  author: string;
+  description: string;
+  price: string;
+  imageUrl: string;
+  imagePublicId: string;
+  order: number;
+}
+
+export async function getBooks() {
+  try {
+    const q = query(collection(db, "books"), orderBy("order", "asc"));
+    const querySnapshot = await getDocs(q);
+    const books = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as Book[];
+    return { success: true, books };
+  } catch (error) {
+    console.error("Error fetching books:", error);
+    return { success: false, error, books: [] };
+  }
+}
+
+export async function addBook(book: Omit<Book, "id">) {
+  try {
+    const docRef = await addDoc(collection(db, "books"), book);
+    return { success: true, id: docRef.id };
+  } catch (error) {
+    console.error("Error adding book:", error);
+    return { success: false, error };
+  }
+}
+
+export async function updateBook(id: string, book: Omit<Book, "id">) {
+  try {
+    await setDoc(doc(db, "books", id), book);
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating book:", error);
+    return { success: false, error };
+  }
+}
+
+export async function deleteBook(id: string) {
+  try {
+    await deleteDoc(doc(db, "books", id));
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting book:", error);
     return { success: false, error };
   }
 }
