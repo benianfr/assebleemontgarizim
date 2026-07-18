@@ -11,6 +11,12 @@ const formatDate = (date: any) => {
   return String(date);
 };
 
+const truncateDescription = (description: string, maxLength: number = 100) => {
+  if (!description) return "";
+  if (description.length <= maxLength) return description;
+  return description.slice(0, maxLength) + "...";
+};
+
 export default function Events() {
   const ref = useRevealOnScroll<HTMLElement>();
   const [events, setEvents] = useState<Event[]>([]);
@@ -192,7 +198,7 @@ export default function Events() {
                     </div>
                   </div>
                   <p style={{ fontSize: "15px", color: "#666", lineHeight: "1.6", marginBottom: "20px" }}>
-                    {e.description}
+                    {truncateDescription(e.description, 120)}
                   </p>
                   <a 
                     href="/evenements" 
