@@ -21,9 +21,12 @@ export const metadata: Metadata = {
   title: "Assemblée Mont Garizim — Une communauté de foi, d'amour et d'espérance",
   description:
     "Site officiel de l'Assemblée Mont Garizim. Découvrez nos cultes, nos ministères, nos événements et rejoignez une communauté qui grandit dans la foi.",
+  manifest: "/manifest.json",
   icons: {
     icon: "/logo1.png",
+    apple: "/logo1.png",
   },
+  themeColor: "#0a2a4d",
 };
 
 export default function RootLayout({
