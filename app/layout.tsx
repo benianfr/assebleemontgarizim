@@ -3,6 +3,7 @@ import { Fraunces, Manrope } from "next/font/google";
 import "./globals.css";
 import LoadingScreen from "@/components/LoadingScreen";
 import PopupComponent from "@/components/Popup";
+import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -40,6 +41,7 @@ export default function RootLayout({
         <LoadingScreen />
         {children}
         <PopupComponent />
+        <PWAInstallPrompt />
       </body>
     </html>
   );
