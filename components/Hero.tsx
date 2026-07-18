@@ -9,6 +9,7 @@ export default function Hero() {
   const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [showInfoCard, setShowInfoCard] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -110,7 +111,7 @@ export default function Hero() {
           >
             Une communauté qui grandit dans la foi, l'amour et l'espérance en Jésus-Christ.
           </p>
-          <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", marginBottom: "24px" }}>
             <a 
               href="/a-propos" 
               style={{
@@ -153,8 +154,52 @@ export default function Hero() {
               Nous rejoindre
             </a>
           </div>
+
+          {/* Mobile Toggle Button */}
+          <button
+            onClick={() => setShowInfoCard(!showInfoCard)}
+            style={{
+              display: "none",
+              width: "100%",
+              padding: "14px 24px",
+              backgroundColor: "rgba(232, 206, 122, 0.2)",
+              color: "#E8CE7A",
+              border: "2px solid #E8CE7A",
+              borderRadius: "8px",
+              fontWeight: "600",
+              fontSize: "14px",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "rgba(232, 206, 122, 0.3)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "rgba(232, 206, 122, 0.2)";
+            }}
+          >
+            {showInfoCard ? "Masquer" : "Voir"} Thème du mois & Prochain culte
+            <svg 
+              width="16" 
+              height="16" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2"
+              style={{
+                transition: "transform 0.3s ease",
+                transform: showInfoCard ? "rotate(180deg)" : "rotate(0deg)",
+              }}
+            >
+              <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
         </div>
 
+        {/* Info Card - Desktop: absolute right, Mobile: below content with toggle */}
         <div 
           style={{
             position: "absolute",
@@ -168,6 +213,7 @@ export default function Hero() {
             maxWidth: "350px",
             color: "white",
             border: "1px solid rgba(255, 255, 255, 0.2)",
+            display: showInfoCard ? "block" : "none",
           }}
         >
           <span 
@@ -319,6 +365,27 @@ export default function Hero() {
         <span>Défiler</span>
         <div style={{ width: "1px", height: "30px", backgroundColor: "rgba(255, 255, 255, 0.5)" }} />
       </div>
+
+      <style jsx global>{`
+        @media (max-width: 1024px) {
+          .hero .container > div:last-child {
+            position: relative !important;
+            right: auto !important;
+            top: auto !important;
+            transform: none !important;
+            margin-top: 32px;
+            max-width: 100% !important;
+          }
+          .hero button[style*="display: none"] {
+            display: flex !important;
+          }
+        }
+        @media (min-width: 1025px) {
+          .hero .container > div:last-child {
+            display: block !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }
