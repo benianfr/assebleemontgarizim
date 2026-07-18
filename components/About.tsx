@@ -173,22 +173,6 @@ export default function About() {
               {aboutSection?.yearsText || "années au service de la communauté"}
             </span>
           </div>
-          <div style={{ color: "white", position: "relative", zIndex: 1 }}>
-            <span 
-              style={{
-                display: "block",
-                fontSize: "48px",
-                fontWeight: "700",
-                color: "#E8CE7A",
-                marginBottom: "8px",
-              }}
-            >
-              {values.length}+
-            </span>
-            <span style={{ fontSize: "16px", opacity: 0.9 }}>
-              Valeurs fondamentales
-            </span>
-          </div>
           <a 
             href="/a-propos" 
             style={{
@@ -208,58 +192,6 @@ export default function About() {
           >
             En savoir plus
           </a>
-        </div>
-
-        {/* Values Grid */}
-        <div style={{ 
-          display: "grid", 
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", 
-          gap: "24px" 
-        }}>
-          {points.map((p, index) => (
-            <div
-              key={p.title}
-              style={{
-                backgroundColor: "white",
-                padding: "32px",
-                borderRadius: "12px",
-                boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
-                transition: "transform 0.3s ease, box-shadow 0.3s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-8px)";
-                e.currentTarget.style.boxShadow = "0 8px 30px rgba(0, 0, 0, 0.12)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow = "0 4px 20px rgba(0, 0, 0, 0.08)";
-              }}
-            >
-              <div 
-                style={{
-                  width: "56px",
-                  height: "56px",
-                  backgroundColor: "rgba(232, 206, 122, 0.2)",
-                  borderRadius: "12px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginBottom: "20px",
-                  fontSize: "24px",
-                  color: "#C9A227",
-                  fontWeight: "700",
-                }}
-              >
-                {index + 1}
-              </div>
-              <h3 style={{ fontSize: "20px", fontWeight: "600", color: "#07213D", marginBottom: "8px" }}>
-                {p.title}
-              </h3>
-              <p style={{ fontSize: "15px", color: "#666", lineHeight: "1.6" }}>
-                {p.text}
-              </p>
-            </div>
-          ))}
         </div>
       </div>
     </section>
