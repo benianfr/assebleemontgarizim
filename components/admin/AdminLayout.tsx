@@ -33,6 +33,7 @@ export const MENU_ITEMS = [
   { path: "/admin/dashboard/temoignages", label: "Témoignages", Icon: MessageIcon },
   { path: "/admin/dashboard/ministeres", label: "Ministères", Icon: UsersIcon },
   { path: "/admin/dashboard/valeurs", label: "Valeurs", Icon: GemIcon },
+  { path: "/admin/dashboard/librairie", label: "Librairie", Icon: InfoIcon },
   { path: "/admin/dashboard/messages", label: "Messages", Icon: MailIcon },
   { path: "/admin/dashboard/popup", label: "Popup", Icon: MessageIcon },
   { path: "/admin/dashboard/parametres", label: "Paramètres", Icon: SettingsIcon },
