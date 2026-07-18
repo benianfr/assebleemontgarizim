@@ -1,13 +1,20 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { usePathname } from "next/navigation";
 
 export default function PWAInstallPrompt() {
+  const pathname = usePathname();
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showPrompt, setShowPrompt] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Don't show PWA install prompt on admin pages
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
   const playSound = () => {
     try {

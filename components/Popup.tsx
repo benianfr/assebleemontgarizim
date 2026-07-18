@@ -1,12 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { getPopup, type Popup } from "@/lib/firestore";
 
 export default function PopupComponent() {
+  const pathname = usePathname();
   const [popup, setPopup] = useState<Popup | null>(null);
   const [visible, setVisible] = useState(false);
   const [closed, setClosed] = useState(false);
+
+  // Don't show popup on admin pages
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
   useEffect(() => {
     async function fetchPopup() {
