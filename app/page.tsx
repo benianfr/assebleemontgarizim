@@ -4,7 +4,6 @@ import About from "@/components/About";
 import Events from "@/components/Events";
 import Sermons from "@/components/Sermons";
 import Testimonials from "@/components/Testimonials";
-import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
 export default function HomePage() {
@@ -17,7 +16,6 @@ export default function HomePage() {
         <Events />
         <Sermons />
         <Testimonials />
-        <Contact />
       </main>
       <Footer />
     </>
