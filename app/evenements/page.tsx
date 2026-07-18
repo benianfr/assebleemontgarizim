@@ -59,6 +59,12 @@ export default function EvenementsPage() {
     ? pastEvents
     : pastEvents.filter(event => event.category === selectedCategory);
 
+  // Truncate description function
+  const truncateDescription = (description: string, maxLength: number = 120) => {
+    if (description.length <= maxLength) return description;
+    return description.substring(0, maxLength) + "...";
+  };
+
   if (loading) {
     return (
       <>
@@ -173,7 +179,7 @@ export default function EvenementsPage() {
                       <span>{event.place}</span>
                       <span>{event.time}</span>
                     </div>
-                    <p style={{ fontSize: "13.5px", lineHeight: "1.65" }}>{event.description}</p>
+                    <p style={{ fontSize: "13.5px", lineHeight: "1.65" }}>{truncateDescription(event.description)}</p>
                   </div>
                 </div>
               ))}
@@ -220,7 +226,7 @@ export default function EvenementsPage() {
                     </span>
                     <h3>{event.title}</h3>
                     <p style={{ fontSize: "13.5px", lineHeight: "1.65" }}>
-                      {event.description}
+                      {truncateDescription(event.description)}
                     </p>
                   </div>
                 </div>
