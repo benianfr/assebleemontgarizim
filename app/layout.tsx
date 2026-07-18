@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Fraunces, Manrope } from "next/font/google";
 import "./globals.css";
 import LoadingScreen from "@/components/LoadingScreen";
-import PopupComponent from "@/components/Popup";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 
 const fraunces = Fraunces({
@@ -105,7 +104,6 @@ export default function RootLayout({
       <body>
         <LoadingScreen />
         {children}
-        <PopupComponent />
         <PWAInstallPrompt />
       </body>
     </html>

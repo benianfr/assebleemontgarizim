@@ -5,6 +5,7 @@ import Events from "@/components/Events";
 import Sermons from "@/components/Sermons";
 import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
+import PopupComponent from "@/components/Popup";
 
 export default function HomePage() {
   return (
@@ -18,6 +19,7 @@ export default function HomePage() {
         <Testimonials />
       </main>
       <Footer />
+      <PopupComponent />
     </>
   );
 }
