@@ -135,9 +135,36 @@ export default function About() {
             flexWrap: "wrap",
             gap: "32px",
             marginBottom: "60px",
+            position: "relative",
+            overflow: "hidden",
           }}
         >
-          <div style={{ color: "white" }}>
+          {/* Background Image */}
+          {galleryImages.length > 0 && (
+            <div 
+              style={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                width: "50%",
+                height: "100%",
+                opacity: 0.15,
+                pointerEvents: "none",
+              }}
+            >
+              <img
+                src={galleryImages[0].imageUrl}
+                alt="Background"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                }}
+              />
+            </div>
+          )}
+          
+          <div style={{ color: "white", position: "relative", zIndex: 1 }}>
             <span 
               style={{
                 display: "block",
@@ -153,7 +180,7 @@ export default function About() {
               {aboutSection?.yearsText || "années au service de la communauté"}
             </span>
           </div>
-          <div style={{ color: "white" }}>
+          <div style={{ color: "white", position: "relative", zIndex: 1 }}>
             <span 
               style={{
                 display: "block",
@@ -180,6 +207,8 @@ export default function About() {
               borderRadius: "8px",
               fontWeight: "600",
               transition: "all 0.3s ease",
+              position: "relative",
+              zIndex: 1,
             }}
             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#C9A227"}
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#E8CE7A"}
