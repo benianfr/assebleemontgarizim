@@ -41,8 +41,11 @@ export default function PWAInstallPrompt() {
     // Check if user already dismissed or app is installed
     const wasDismissed = localStorage.getItem("pwa-install-dismissed");
     const isInstalled = localStorage.getItem("pwa-installed");
+    console.log("PWA Install Prompt - wasDismissed:", wasDismissed, "isInstalled:", isInstalled);
+    
     if (wasDismissed || isInstalled) {
       setDismissed(true);
+      console.log("PWA Install Prompt - dismissed or installed, not showing");
       return;
     }
 
@@ -50,27 +53,30 @@ export default function PWAInstallPrompt() {
     if (window.matchMedia("(display-mode: standalone)").matches) {
       localStorage.setItem("pwa-installed", "true");
       setDismissed(true);
+      console.log("PWA Install Prompt - running in standalone mode");
       return;
     }
 
     // Check if iOS
     const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
     setIsIOS(isIOSDevice);
+    console.log("PWA Install Prompt - isIOS:", isIOSDevice);
 
     // Show prompt every 5 seconds with sound
     const showNotification = () => {
+      console.log("PWA Install Prompt - showing notification");
       setShowPrompt(true);
       playSound();
     };
 
-    // Initial delay of 5 seconds
+    // Initial delay of 2 seconds (reduced from 5)
     const initialTimer = setTimeout(() => {
       showNotification();
       // Then show every 5 seconds
       intervalRef.current = setInterval(() => {
         showNotification();
       }, 5000);
-    }, 5000);
+    }, 2000);
 
     // For Android/Desktop, also listen for beforeinstallprompt
     const handleBeforeInstallPrompt = (e: Event) => {
