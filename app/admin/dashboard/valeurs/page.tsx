@@ -10,6 +10,7 @@ export default function AdminValeurs() {
   const [values, setValues] = useState<Value[]>([]);
   const [showAddValue, setShowAddValue] = useState(false);
   const [newValue, setNewValue] = useState<Omit<Value, "order" | "id">>({ title: "", text: "" });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -21,16 +22,37 @@ export default function AdminValeurs() {
   };
 
   const handleDeleteValue = async (id: string) => {
-    await deleteDoc(doc(db, "values", id));
-    fetchData();
+    if (confirm("Êtes-vous sûr de vouloir supprimer cette valeur ?")) {
+      setLoading(true);
+      try {
+        await deleteDoc(doc(db, "values", id));
+        // Optimistic update
+        setValues(values.filter(v => v.id !== id));
+        await fetchData();
+      } catch (error) {
+        console.error("Erreur lors de la suppression:", error);
+        alert("Erreur lors de la suppression de la valeur.");
+        await fetchData();
+      } finally {
+        setLoading(false);
+      }
+    }
   };
 
   const handleAddValue = async () => {
-    const result = await addValue(newValue);
-    if (result.success) {
-      setShowAddValue(false);
-      setNewValue({ title: "", text: "" });
-      fetchData();
+    setLoading(true);
+    try {
+      const result = await addValue(newValue);
+      if (result.success) {
+        setShowAddValue(false);
+        setNewValue({ title: "", text: "" });
+        await fetchData();
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'ajout:", error);
+      alert("Erreur lors de l'ajout de la valeur.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -39,7 +61,7 @@ export default function AdminValeurs() {
       <PageHeader title="Valeurs" description={`${values.length} valeur(s) enregistrée(s).`} />
 
       <div style={{ marginBottom: 16 }}>
-        <Button onClick={() => setShowAddValue(true)}>+ Ajouter une valeur</Button>
+        <Button onClick={() => setShowAddValue(true)} disabled={loading}>+ Ajouter une valeur</Button>
       </div>
 
       <DataTable
@@ -54,7 +76,7 @@ export default function AdminValeurs() {
             key: "actions",
             label: "Actions",
             render: (v) => (
-              <Button variant="danger" small onClick={() => handleDeleteValue(v.id)}>
+              <Button variant="danger" small onClick={() => handleDeleteValue(v.id)} disabled={loading}>
                 Supprimer
               </Button>
             ),
@@ -73,8 +95,8 @@ export default function AdminValeurs() {
               <Textarea value={newValue.text} onChange={(e) => setNewValue({ ...newValue, text: e.target.value })} />
             </Field>
             <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
-              <Button onClick={handleAddValue}>Enregistrer</Button>
-              <Button onClick={() => setShowAddValue(false)}>Annuler</Button>
+              <Button onClick={handleAddValue} disabled={loading}>{loading ? "Enregistrement..." : "Enregistrer"}</Button>
+              <Button onClick={() => setShowAddValue(false)} disabled={loading}>Annuler</Button>
             </div>
           </Card>
         </div>

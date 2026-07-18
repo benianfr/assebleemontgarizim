@@ -9,6 +9,7 @@ import { PageHeader, DataTable, Button, Badge, ActionsRow, Card } from "@/compon
 export default function AdminTemoignages() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -26,13 +27,43 @@ export default function AdminTemoignages() {
   };
 
   const handleApprove = async (t: Testimonial) => {
-    await setDoc(doc(collection(db, "testimonials"), `${t.prenom}-${t.nom}-${t.telephone}`), { approved: true });
-    fetchData();
+    setLoading(true);
+    try {
+      await setDoc(doc(db, "testimonials", `${t.prenom}-${t.nom}-${t.telephone}`), { approved: true }, { merge: true });
+      // Optimistic update
+      setTestimonials(testimonials.map(test => 
+        test.prenom === t.prenom && test.nom === t.nom && test.telephone === t.telephone 
+          ? { ...test, approved: true } 
+          : test
+      ));
+      await fetchData();
+    } catch (error) {
+      console.error("Erreur lors de l'approbation:", error);
+      alert("Erreur lors de l'approbation du témoignage.");
+      await fetchData();
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleReject = async (t: Testimonial) => {
-    await deleteDoc(doc(collection(db, "testimonials"), `${t.prenom}-${t.nom}-${t.telephone}`));
-    fetchData();
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce témoignage ?")) {
+      setLoading(true);
+      try {
+        await deleteDoc(doc(db, "testimonials", `${t.prenom}-${t.nom}-${t.telephone}`));
+        // Optimistic update
+        setTestimonials(testimonials.filter(test => 
+          !(test.prenom === t.prenom && test.nom === t.nom && test.telephone === t.telephone)
+        ));
+        await fetchData();
+      } catch (error) {
+        console.error("Erreur lors de la suppression:", error);
+        alert("Erreur lors de la suppression du témoignage.");
+        await fetchData();
+      } finally {
+        setLoading(false);
+      }
+    }
   };
 
   const handleView = (t: Testimonial) => {
@@ -62,20 +93,20 @@ export default function AdminTemoignages() {
             label: "Actions",
             render: (t) => (
               <ActionsRow>
-                <Button variant="ghost" small onClick={() => handleView(t)}>
+                <Button variant="ghost" small onClick={() => handleView(t)} disabled={loading}>
                   Voir
                 </Button>
                 {!t.approved ? (
                   <>
-                    <Button variant="success" small onClick={() => handleApprove(t)}>
+                    <Button variant="success" small onClick={() => handleApprove(t)} disabled={loading}>
                       Approuver
                     </Button>
-                    <Button variant="danger" small onClick={() => handleReject(t)}>
+                    <Button variant="danger" small onClick={() => handleReject(t)} disabled={loading}>
                       Rejeter
                     </Button>
                   </>
                 ) : (
-                  <Button variant="danger" small onClick={() => handleReject(t)}>
+                  <Button variant="danger" small onClick={() => handleReject(t)} disabled={loading}>
                     Supprimer
                   </Button>
                 )}
@@ -115,15 +146,15 @@ export default function AdminTemoignages() {
               </Button>
               {!selectedTestimonial.approved ? (
                 <>
-                  <Button variant="success" onClick={() => { handleApprove(selectedTestimonial); setSelectedTestimonial(null); }}>
+                  <Button variant="success" onClick={() => { handleApprove(selectedTestimonial); setSelectedTestimonial(null); }} disabled={loading}>
                     Approuver
                   </Button>
-                  <Button variant="danger" onClick={() => { handleReject(selectedTestimonial); setSelectedTestimonial(null); }}>
+                  <Button variant="danger" onClick={() => { handleReject(selectedTestimonial); setSelectedTestimonial(null); }} disabled={loading}>
                     Rejeter
                   </Button>
                 </>
               ) : (
-                <Button variant="danger" onClick={() => { handleReject(selectedTestimonial); setSelectedTestimonial(null); }}>
+                <Button variant="danger" onClick={() => { handleReject(selectedTestimonial); setSelectedTestimonial(null); }} disabled={loading}>
                   Supprimer
                 </Button>
               )}

@@ -11,6 +11,7 @@ export default function AdminMinisteres() {
   const [ministries, setMinistries] = useState<Ministry[]>([]);
   const [showAddMinistry, setShowAddMinistry] = useState(false);
   const [newMinistry, setNewMinistry] = useState<Omit<Ministry, "order" | "id">>({ imageUrl: "", imagePublicId: "", title: "", description: "", schedule: "", leader: "" });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -23,22 +24,36 @@ export default function AdminMinisteres() {
 
   const handleDeleteMinistry = async (id: string) => {
     if (confirm("Êtes-vous sûr de vouloir supprimer ce ministère ?")) {
+      setLoading(true);
       try {
         await deleteDoc(doc(db, "ministries", id));
-        fetchData();
+        // Optimistic update
+        setMinistries(ministries.filter(m => m.id !== id));
+        await fetchData();
       } catch (error) {
         console.error("Erreur lors de la suppression:", error);
         alert("Erreur lors de la suppression du ministère.");
+        await fetchData();
+      } finally {
+        setLoading(false);
       }
     }
   };
 
   const handleAddMinistry = async () => {
-    const result = await addMinistry(newMinistry);
-    if (result.success) {
-      setShowAddMinistry(false);
-      setNewMinistry({ imageUrl: "", imagePublicId: "", title: "", description: "", schedule: "", leader: "" });
-      fetchData();
+    setLoading(true);
+    try {
+      const result = await addMinistry(newMinistry);
+      if (result.success) {
+        setShowAddMinistry(false);
+        setNewMinistry({ imageUrl: "", imagePublicId: "", title: "", description: "", schedule: "", leader: "" });
+        await fetchData();
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'ajout:", error);
+      alert("Erreur lors de l'ajout du ministère.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,7 +62,7 @@ export default function AdminMinisteres() {
       <PageHeader title="Ministères" description={`${ministries.length} ministère(s) actif(s).`} />
 
       <div style={{ marginBottom: 16 }}>
-        <Button onClick={() => setShowAddMinistry(true)}>+ Ajouter un ministère</Button>
+        <Button onClick={() => setShowAddMinistry(true)} disabled={loading}>+ Ajouter un ministère</Button>
       </div>
 
       <DataTable
@@ -62,7 +77,7 @@ export default function AdminMinisteres() {
             key: "actions",
             label: "Actions",
             render: (m) => (
-              <Button variant="danger" small onClick={() => handleDeleteMinistry(m.id)}>
+              <Button variant="danger" small onClick={() => handleDeleteMinistry(m.id)} disabled={loading}>
                 Supprimer
               </Button>
             ),
@@ -94,8 +109,8 @@ export default function AdminMinisteres() {
               <Input value={newMinistry.schedule} onChange={(e) => setNewMinistry({ ...newMinistry, schedule: e.target.value })} />
             </Field>
             <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
-              <Button onClick={handleAddMinistry}>Enregistrer</Button>
-              <Button onClick={() => setShowAddMinistry(false)}>Annuler</Button>
+              <Button onClick={handleAddMinistry} disabled={loading}>{loading ? "Enregistrement..." : "Enregistrer"}</Button>
+              <Button onClick={() => setShowAddMinistry(false)} disabled={loading}>Annuler</Button>
             </div>
           </Card>
         </div>

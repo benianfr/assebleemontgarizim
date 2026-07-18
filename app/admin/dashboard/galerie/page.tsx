@@ -11,6 +11,7 @@ export default function AdminGalerie() {
   const [images, setImages] = useState<GalleryImage[]>([]);
   const [showAddImage, setShowAddImage] = useState(false);
   const [newImage, setNewImage] = useState<Omit<GalleryImage, "order" | "id">>({ imageUrl: "", imagePublicId: "", caption: "", category: "" });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -22,16 +23,37 @@ export default function AdminGalerie() {
   };
 
   const handleDeleteImage = async (id: string) => {
-    await deleteDoc(doc(db, "gallery", id));
-    fetchData();
+    if (confirm("Êtes-vous sûr de vouloir supprimer cette image ?")) {
+      setLoading(true);
+      try {
+        await deleteDoc(doc(db, "gallery", id));
+        // Optimistic update
+        setImages(images.filter(img => img.id !== id));
+        await fetchData();
+      } catch (error) {
+        console.error("Erreur lors de la suppression:", error);
+        alert("Erreur lors de la suppression de l'image.");
+        await fetchData();
+      } finally {
+        setLoading(false);
+      }
+    }
   };
 
   const handleAddImage = async () => {
-    const result = await addGalleryImage(newImage);
-    if (result.success) {
-      setShowAddImage(false);
-      setNewImage({ imageUrl: "", imagePublicId: "", caption: "", category: "" });
-      fetchData();
+    setLoading(true);
+    try {
+      const result = await addGalleryImage(newImage);
+      if (result.success) {
+        setShowAddImage(false);
+        setNewImage({ imageUrl: "", imagePublicId: "", caption: "", category: "" });
+        await fetchData();
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'ajout:", error);
+      alert("Erreur lors de l'ajout de l'image.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -40,7 +62,7 @@ export default function AdminGalerie() {
       <PageHeader title="Galerie" description={`${images.length} image(s) publiée(s).`} />
 
       <div style={{ marginBottom: 16 }}>
-        <Button onClick={() => setShowAddImage(true)}>+ Ajouter une image</Button>
+        <Button onClick={() => setShowAddImage(true)} disabled={loading}>+ Ajouter une image</Button>
       </div>
 
       <DataTable
@@ -65,7 +87,7 @@ export default function AdminGalerie() {
             key: "actions",
             label: "Actions",
             render: (img) => (
-              <Button variant="danger" small onClick={() => handleDeleteImage(img.id)}>
+              <Button variant="danger" small onClick={() => handleDeleteImage(img.id)} disabled={loading}>
                 Supprimer
               </Button>
             ),
@@ -91,8 +113,8 @@ export default function AdminGalerie() {
               <Input value={newImage.category} onChange={(e) => setNewImage({ ...newImage, category: e.target.value })} />
             </Field>
             <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
-              <Button onClick={handleAddImage}>Enregistrer</Button>
-              <Button onClick={() => setShowAddImage(false)}>Annuler</Button>
+              <Button onClick={handleAddImage} disabled={loading}>{loading ? "Enregistrement..." : "Enregistrer"}</Button>
+              <Button onClick={() => setShowAddImage(false)} disabled={loading}>Annuler</Button>
             </div>
           </Card>
         </div>
