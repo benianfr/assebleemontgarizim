@@ -105,9 +105,7 @@ export default function AdminLayout({
       {/* Sidebar: fixed on desktop, off-canvas drawer on mobile */}
       <aside className={`${styles.sidebar} ${drawerOpen ? styles.sidebarOpen : ""}`}>
         <div className={styles.brand}>
-          <div className={styles.brandMark} aria-hidden="true">
-            EMG
-          </div>
+          <img src="/logo1.png" alt="Logo Assemblée Mont Garizim" style={{ width: "48px", height: "48px", borderRadius: "8px" }} />
           <div>
             <p className={styles.brandTitle}>Assemblée Mont Garizim</p>
             <p className={styles.brandSubtitle}>Espace d&rsquo;administration</p>
