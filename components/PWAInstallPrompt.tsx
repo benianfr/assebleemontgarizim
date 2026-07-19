@@ -9,7 +9,9 @@ export default function PWAInstallPrompt() {
   const [showPrompt, setShowPrompt] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
   const [dismissed, setDismissed] = useState(false);
+  const [canInstall, setCanInstall] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Don't show PWA install prompt on admin pages
   if (pathname?.startsWith("/admin")) {
@@ -62,28 +64,33 @@ export default function PWAInstallPrompt() {
     setIsIOS(isIOSDevice);
     console.log("PWA Install Prompt - isIOS:", isIOSDevice);
 
-    // Show prompt every 5 seconds with sound
+    // Show prompt after 3 seconds
     const showNotification = () => {
       console.log("PWA Install Prompt - showing notification");
       setShowPrompt(true);
       playSound();
+      
+      // Auto-hide after 10 seconds if not dismissed
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      timeoutRef.current = setTimeout(() => {
+        setShowPrompt(false);
+      }, 10000);
     };
 
-    // Initial delay of 2 seconds (reduced from 5)
+    // Initial delay of 3 seconds
     const initialTimer = setTimeout(() => {
       showNotification();
-      // Then show every 5 seconds
-      intervalRef.current = setInterval(() => {
-        showNotification();
-      }, 5000);
-    }, 2000);
+    }, 3000);
 
     // For Android/Desktop, also listen for beforeinstallprompt
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      setShowPrompt(true);
-      playSound();
+      setCanInstall(true);
+      console.log("PWA Install Prompt - beforeinstallprompt event fired");
+      showNotification();
     };
 
     // Listen for appinstalled event to mark app as installed
@@ -91,9 +98,14 @@ export default function PWAInstallPrompt() {
       localStorage.setItem("pwa-installed", "true");
       setShowPrompt(false);
       setDeferredPrompt(null);
+      setCanInstall(false);
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      console.log("PWA Install Prompt - app installed");
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
@@ -104,6 +116,9 @@ export default function PWAInstallPrompt() {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
       window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
       window.removeEventListener("appinstalled", handleAppInstalled);
     };
@@ -113,9 +128,11 @@ export default function PWAInstallPrompt() {
     if (deferredPrompt) {
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
+      console.log("PWA Install Prompt - user choice:", outcome);
       if (outcome === "accepted") {
         setDeferredPrompt(null);
         setShowPrompt(false);
+        setCanInstall(false);
       }
     }
   };
@@ -127,6 +144,21 @@ export default function PWAInstallPrompt() {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  };
+
+  const handleLater = () => {
+    setShowPrompt(false);
+    // Show again after 30 seconds
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    intervalRef.current = setTimeout(() => {
+      setShowPrompt(true);
+      playSound();
+    }, 30000);
   };
 
   if (!showPrompt || dismissed) return null;
@@ -138,43 +170,61 @@ export default function PWAInstallPrompt() {
         bottom: 20,
         left: 20,
         right: 20,
-        maxWidth: 400,
+        maxWidth: 420,
         margin: "0 auto",
-        background: "#fff",
-        borderRadius: 12,
-        padding: 20,
-        boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
+        background: "linear-gradient(135deg, #07213D 0%, #0a2a4d 100%)",
+        borderRadius: 16,
+        padding: 24,
+        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
         zIndex: 1000,
-        animation: "slideUp 0.3s ease",
+        animation: "slideUp 0.5s ease",
+        color: "white",
       }}
     >
-      <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+      <div style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
         <div
           style={{
-            width: 48,
-            height: 48,
-            borderRadius: 8,
-            background: "#0a2a4d",
+            width: 56,
+            height: 56,
+            borderRadius: 12,
+            background: "rgba(232, 206, 122, 0.2)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             flexShrink: 0,
+            border: "2px solid rgba(232, 206, 122, 0.3)",
           }}
         >
-          <img src="/logo1.png" alt="Logo" style={{ width: 32, height: 32 }} />
+          <img src="/logo1.png" alt="Logo" style={{ width: 36, height: 36 }} />
         </div>
         <div style={{ flex: 1 }}>
-          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: "#0a2a4d" }}>
-            Installer l'application
-          </h3>
-          <p style={{ margin: "4px 0 0", fontSize: 14, color: "#666", lineHeight: 1.4 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+            <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#E8CE7A" }}>
+              Installer l'application
+            </h3>
+            <span 
+              style={{
+                background: "rgba(232, 206, 122, 0.3)",
+                color: "#E8CE7A",
+                fontSize: "10px",
+                fontWeight: "600",
+                padding: "2px 8px",
+                borderRadius: "10px",
+                textTransform: "uppercase",
+                letterSpacing: "0.5px",
+              }}
+            >
+              Nouveau
+            </span>
+          </div>
+          <p style={{ margin: 0, fontSize: 14, color: "rgba(255, 255, 255, 0.9)", lineHeight: 1.5 }}>
             {isIOS
               ? "Ajoutez l'Assemblée Mont Garizim à votre écran d'accueil pour une expérience optimale."
-              : "Installez notre application pour accéder rapidement à nos contenus."}
+              : "Installez notre application pour accéder rapidement à nos contenus sans passer par le navigateur."}
           </p>
           {isIOS && (
-            <p style={{ margin: "8px 0 0", fontSize: 12, color: "#888" }}>
-              Appuyez sur <strong>Partager</strong> puis <strong>Ajouter à l'écran d'accueil</strong>
+            <p style={{ margin: "8px 0 0", fontSize: 12, color: "rgba(255, 255, 255, 0.7)" }}>
+              Appuyez sur <strong style={{ color: "#E8CE7A" }}>Partager</strong> puis <strong style={{ color: "#E8CE7A" }}>Ajouter à l'écran d'accueil</strong>
             </p>
           )}
         </div>
@@ -183,39 +233,70 @@ export default function PWAInstallPrompt() {
           style={{
             background: "none",
             border: "none",
-            fontSize: 20,
+            fontSize: 24,
             cursor: "pointer",
-            color: "#999",
+            color: "rgba(255, 255, 255, 0.6)",
             padding: 4,
+            lineHeight: 1,
+            transition: "color 0.2s ease",
           }}
+          onMouseEnter={(e) => e.currentTarget.style.color = "rgba(255, 255, 255, 1)"}
+          onMouseLeave={(e) => e.currentTarget.style.color = "rgba(255, 255, 255, 0.6)"}
         >
           ×
         </button>
       </div>
-      {!isIOS && (
+      <div style={{ display: "flex", gap: 12, marginTop: 20 }}>
+        {!isIOS && canInstall && (
+          <button
+            onClick={handleInstall}
+            style={{
+              flex: 1,
+              padding: 14,
+              background: "#E8CE7A",
+              color: "#07213D",
+              border: "none",
+              borderRadius: 10,
+              fontSize: 15,
+              fontWeight: 700,
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.background = "#C9A227"}
+            onMouseLeave={(e) => e.currentTarget.style.background = "#E8CE7A"}
+          >
+            Installer maintenant
+          </button>
+        )}
         <button
-          onClick={handleInstall}
+          onClick={handleLater}
           style={{
-            width: "100%",
-            marginTop: 16,
-            padding: 12,
-            background: "#0a2a4d",
-            color: "#fff",
-            border: "none",
-            borderRadius: 8,
-            fontSize: 14,
+            flex: 1,
+            padding: 14,
+            background: "rgba(255, 255, 255, 0.1)",
+            color: "white",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+            borderRadius: 10,
+            fontSize: 15,
             fontWeight: 600,
             cursor: "pointer",
+            transition: "all 0.3s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
           }}
         >
-          Installer
+          Plus tard
         </button>
-      )}
+      </div>
       <style jsx>{`
         @keyframes slideUp {
           from {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(30px);
           }
           to {
             opacity: 1;
