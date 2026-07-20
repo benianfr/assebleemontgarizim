@@ -16,6 +16,7 @@ export default function AProposPage() {
   const [locations, setLocations] = useState<Location[]>([]);
   const [historySection, setHistorySection] = useState<HistorySection>({ imageUrl: "", imagePublicId: "" });
   const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -168,7 +169,7 @@ export default function AProposPage() {
             <div className="scroll-horizontal">
               {displayLocations.map((location) => (
                 <div className="card" key={location.name}>
-                  <div className="card-media">
+                  <div className="card-media" style={{ cursor: location.imageUrl ? "pointer" : "default" }} onClick={() => location.imageUrl && setSelectedImage(location.imageUrl)}>
                     {location.imageUrl ? (
                       <img src={location.imageUrl} alt={location.name} style={{ width: "100%", height: "auto", objectFit: "cover" }} />
                     ) : (
@@ -215,6 +216,58 @@ export default function AProposPage() {
             </div>
           </div>
         </section>
+
+        {/* Lightbox Modal */}
+        {selectedImage && (
+          <div 
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: "rgba(0, 0, 0, 0.9)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 9999,
+              cursor: "pointer"
+            }}
+            onClick={() => setSelectedImage(null)}
+          >
+            <img 
+              src={selectedImage} 
+              alt="Agrandissement" 
+              style={{ 
+                maxWidth: "90%", 
+                maxHeight: "90%", 
+                objectFit: "contain",
+                borderRadius: "var(--radius-md)"
+              }} 
+              onClick={(e) => e.stopPropagation()}
+            />
+            <button
+              style={{
+                position: "absolute",
+                top: "20px",
+                right: "20px",
+                backgroundColor: "white",
+                border: "none",
+                borderRadius: "50%",
+                width: "40px",
+                height: "40px",
+                fontSize: "24px",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+              onClick={() => setSelectedImage(null)}
+            >
+              ×
+            </button>
+          </div>
+        )}
       </main>
       <Footer />
     </>
