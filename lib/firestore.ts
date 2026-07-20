@@ -306,6 +306,7 @@ export interface Event {
   time: string;
   description: string;
   category: string;
+  actionButtonText?: string;
   order: number;
 }
 

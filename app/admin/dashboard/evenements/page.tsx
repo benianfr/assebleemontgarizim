@@ -22,7 +22,7 @@ export default function AdminEvenements() {
   const [loading, setLoading] = useState(true);
   const [showAddEvent, setShowAddEvent] = useState(false);
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
-  const [newEvent, setNewEvent] = useState<Omit<Event, "order" | "id">>({ imageUrl: "", imagePublicId: "", date: "", title: "", place: "", time: "", description: "", category: "upcoming" });
+  const [newEvent, setNewEvent] = useState<Omit<Event, "order" | "id">>({ imageUrl: "", imagePublicId: "", date: "", title: "", place: "", time: "", description: "", category: "upcoming", actionButtonText: "" });
 
   useEffect(() => {
     fetchData();
@@ -67,7 +67,7 @@ export default function AdminEvenements() {
     const result = await addEvent(newEvent);
     if (result.success) {
       setShowAddEvent(false);
-      setNewEvent({ imageUrl: "", imagePublicId: "", date: "", title: "", place: "", time: "", description: "", category: "upcoming" });
+      setNewEvent({ imageUrl: "", imagePublicId: "", date: "", title: "", place: "", time: "", description: "", category: "upcoming", actionButtonText: "" });
       fetchData();
     }
   };
@@ -191,6 +191,9 @@ export default function AdminEvenements() {
                   <Field label="Catégorie">
                     <Input value={newEvent.category} onChange={(e) => setNewEvent({ ...newEvent, category: e.target.value })} />
                   </Field>
+                  <Field label="Texte du bouton d'action">
+                    <Input value={newEvent.actionButtonText || ""} onChange={(e) => setNewEvent({ ...newEvent, actionButtonText: e.target.value })} placeholder="Ex: S'inscrire, Réserver, etc." />
+                  </Field>
                   <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
                     <Button onClick={handleAddEvent}>Enregistrer</Button>
                     <Button onClick={() => setShowAddEvent(false)}>Annuler</Button>
@@ -242,6 +245,9 @@ export default function AdminEvenements() {
                   </Field>
                   <Field label="Catégorie">
                     <Input value={editingEvent.category} onChange={(e) => setEditingEvent({ ...editingEvent, category: e.target.value })} />
+                  </Field>
+                  <Field label="Texte du bouton d'action">
+                    <Input value={editingEvent.actionButtonText || ""} onChange={(e) => setEditingEvent({ ...editingEvent, actionButtonText: e.target.value })} placeholder="Ex: S'inscrire, Réserver, etc." />
                   </Field>
                   <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
                     <Button onClick={handleSaveEvent}>Enregistrer</Button>

@@ -348,7 +348,7 @@ export default function EvenementsPage() {
                 </div>
               </div>
               <a href="/contact" className="btn btn-gold" style={{ marginTop: "24px", display: "inline-block" }}>
-                S'inscrire à cet événement
+                {selectedEvent.actionButtonText || "S'inscrire à cet événement"}
               </a>
             </div>
           </div>
