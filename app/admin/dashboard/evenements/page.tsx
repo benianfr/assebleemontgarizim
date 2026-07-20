@@ -22,7 +22,7 @@ export default function AdminEvenements() {
   const [loading, setLoading] = useState(true);
   const [showAddEvent, setShowAddEvent] = useState(false);
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
-  const [newEvent, setNewEvent] = useState<Omit<Event, "order" | "id">>({ imageUrl: "", imagePublicId: "", date: "", title: "", place: "", time: "", description: "", category: "upcoming", actionButtonText: "" });
+  const [newEvent, setNewEvent] = useState<Omit<Event, "order" | "id">>({ imageUrl: "", imagePublicId: "", date: "", title: "", place: "", time: "", description: "", category: "upcoming", actionButtonText: "", actionButtonLink: "" });
 
   useEffect(() => {
     fetchData();
@@ -67,7 +67,7 @@ export default function AdminEvenements() {
     const result = await addEvent(newEvent);
     if (result.success) {
       setShowAddEvent(false);
-      setNewEvent({ imageUrl: "", imagePublicId: "", date: "", title: "", place: "", time: "", description: "", category: "upcoming", actionButtonText: "" });
+      setNewEvent({ imageUrl: "", imagePublicId: "", date: "", title: "", place: "", time: "", description: "", category: "upcoming", actionButtonText: "", actionButtonLink: "" });
       fetchData();
     }
   };
@@ -194,6 +194,9 @@ export default function AdminEvenements() {
                   <Field label="Texte du bouton d'action">
                     <Input value={newEvent.actionButtonText || ""} onChange={(e) => setNewEvent({ ...newEvent, actionButtonText: e.target.value })} placeholder="Ex: S'inscrire, Réserver, etc." />
                   </Field>
+                  <Field label="Lien du bouton d'action">
+                    <Input value={newEvent.actionButtonLink || ""} onChange={(e) => setNewEvent({ ...newEvent, actionButtonLink: e.target.value })} placeholder="Ex: /contact, https://example.com, etc." />
+                  </Field>
                   <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
                     <Button onClick={handleAddEvent}>Enregistrer</Button>
                     <Button onClick={() => setShowAddEvent(false)}>Annuler</Button>
@@ -248,6 +251,9 @@ export default function AdminEvenements() {
                   </Field>
                   <Field label="Texte du bouton d'action">
                     <Input value={editingEvent.actionButtonText || ""} onChange={(e) => setEditingEvent({ ...editingEvent, actionButtonText: e.target.value })} placeholder="Ex: S'inscrire, Réserver, etc." />
+                  </Field>
+                  <Field label="Lien du bouton d'action">
+                    <Input value={editingEvent.actionButtonLink || ""} onChange={(e) => setEditingEvent({ ...editingEvent, actionButtonLink: e.target.value })} placeholder="Ex: /contact, https://example.com, etc." />
                   </Field>
                   <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
                     <Button onClick={handleSaveEvent}>Enregistrer</Button>
